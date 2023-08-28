@@ -45,7 +45,7 @@ function monitor() {
 		if (ramTotal >= 900000000) {
 			console.log(chalk.bgRed('El sitema exedio el consumo de 1GB de ram reiniciando para evitar problemas'));
 			clearInterval(ramCheck);
-			events.emit('message', 'reset');
+			events.emit('message', 'restart');
 		};
 	});
 
@@ -56,7 +56,7 @@ function monitor() {
 		if (isTimeFull) {
 			console.log(chalk.bgRed('El sitema llego a su tiempo limite de encendido reiniciando para evitar problemas'));
 			clearInterval(timeFull);
-			events.emit('message', 'reset');
+			events.emit('message', 'restart');
 		};
 	});
 
@@ -64,7 +64,7 @@ function monitor() {
 		if (name && event == 'update') {
 			let filename = path.basename(name);
 			console.log(chalk.bgRed(`${filename} se actualizo, se reiniciara para aplicar los cambios.`));
-			events.emit('message', 'reset');
+			events.emit('message', 'restart');
 		};
 	});
 
