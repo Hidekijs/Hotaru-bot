@@ -12,10 +12,9 @@ global.bot = {
 	"name": "⛩️ʜᴏᴛᴀʀᴜ | ʙᴏᴛ⛩️",
 	"image": ""
 };
-global.icon = {
-	mode: true,
-	emoji: '⛩️'
-}
+
+global.mod = ['5493572542901', '5493572571050'];
+
 global.fake = `*_${bot.name} by ${owner.name}_*`
 global.prefix = ['!', '-', '+', '.'];
 global.react = {

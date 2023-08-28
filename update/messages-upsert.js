@@ -27,8 +27,11 @@ const updateMessages = async(sock, m, store) => {
 			if (isLink) {
 				if (m.body.includes('https://chat.whatsapp.com/' + code)) return m.react('🧐');
 				if (m.fromMe) return;
-				if (m.isOwner) return;
-				if (m.isAdmin) return m.react('🫠');
+//				if (m.isOwner) return;
+				if (m.isAdmin && !m.isOwner) {
+					await m.delete();
+					await m.reply('*⛩️ Stupid admin no envies links prohibidos da el ejemplo.*');
+				};
 				await sock.groupParticipantsUpdate(m.from, [m.sender], 'remove');
 				await m.delay(1500);
 				await m.delete();
@@ -48,7 +51,7 @@ const updateMessages = async(sock, m, store) => {
 				if (!m.mentionUser) return m.reply('*⛩️ Marque un mensaje o use @ para elejir a quien eliminar.*');
 				let user = m.mentionUser && m.mentionUser[0] || m.quoted.sender;
 				if (sock.user.jid == user) return m.reply('*⛩️ No puedo autoeliminarme.*');
-				if (groupAdmins.includes(user)) return m.reply('*⛩️ Mis permisos no me permiten eliminar a otro administrador.*');
+				if (groupAdmins.includes(user) && !m.isOwner) return m.reply('*⛩️ Mis permisos no me permiten eliminar a otro administrador.*');
 				if (user == m.sender) return m.reply('*⛩️ No puedes autoeliminarte.*')
 				await sock.groupParticipantsUpdate(m.from, [user], 'remove');
 				await m.reply('*⛩️ El usuario @' + user.split`@`[0] + ' ya no forma parte del grupo.*');
