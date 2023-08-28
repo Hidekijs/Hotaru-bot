@@ -28,7 +28,7 @@ const updateMessages = async(sock, m, store) => {
 				if (m.body.includes('https://chat.whatsapp.com/' + code)) return m.react('🧐');
 				if (m.fromMe) return;
 //				if (m.isOwner) return;
-				if (m.isAdmin && !m.isOwner) {
+				if (m.isAdmin) {
 					await m.delete();
 					return await m.reply('*⛩️ Stupid admin no envies links prohibidos da el ejemplo.*');
 				};
