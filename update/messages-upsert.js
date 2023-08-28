@@ -48,7 +48,7 @@ const updateMessages = async(sock, m, store) => {
 			case 'eliminar': {
 				if (!m.isBotAdmin) return m.reply('*⛩️ No se puede usar esta funcion si no soy administrador.*');
 				if (!m.isAdmin) return m.reply('*⛩️ Esta funcion es solo para los administradores.*');
-				if (!m.mentionUser) return m.reply('*⛩️ Marque un mensaje o use @ para elejir a quien eliminar.*');
+				if (m.mentionUser.length == 0) return m.reply('*⛩️ Marque un mensaje o use @ para elejir a quien eliminar.*');
 				let user = m.mentionUser && m.mentionUser[0] || m.quoted.sender;
 				if (sock.user.jid == user) return m.reply('*⛩️ No puedo autoeliminarme.*');
 				if (groupAdmins.includes(user) && !m.isOwner) return m.reply('*⛩️ Mis permisos no me permiten eliminar a otro administrador.*');
