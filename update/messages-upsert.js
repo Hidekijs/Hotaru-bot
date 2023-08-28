@@ -11,7 +11,7 @@ const updateMessages = async(sock, m, store) => {
 
 		await dataBase(sock, m, db);
 
-		let metadata = sock.chats[m.from] || await sock.groupMetadata(m.from).catch(_ => {});
+		let metadata = sock.chats[m.from] ? sock.chats[m.from] : await sock.groupMetadata(m.from).catch(_ => {});
 		let groupAdmins = await getAdmins(metadata.participants);
 
 		///[ BASE DE DATOS ]///
