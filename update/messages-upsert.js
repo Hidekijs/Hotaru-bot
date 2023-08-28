@@ -30,7 +30,7 @@ const updateMessages = async(sock, m, store) => {
 //				if (m.isOwner) return;
 				if (m.isAdmin && !m.isOwner) {
 					await m.delete();
-					await m.reply('*⛩️ Stupid admin no envies links prohibidos da el ejemplo.*');
+					return await m.reply('*⛩️ Stupid admin no envies links prohibidos da el ejemplo.*');
 				};
 				await sock.groupParticipantsUpdate(m.from, [m.sender], 'remove');
 				await m.delay(1500);
