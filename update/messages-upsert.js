@@ -181,16 +181,16 @@ const updateMessages = async(sock, m, store) => {
 				if (!m.isAdmin) return m.reply('*⛩️ Esta funcion es solo para los administradores.*');
 				if (!isWelcome) return m.reply('*⛩️ Esta funcion no funciona si no esta la bienvenida encendida.*');
 				if (/welcome|wel|bienvenida/.test(m.args[0])) {
-					let Welcome = db.data.chats[id]?.customWel;
-					let teks = Welcome.replace('@user', `@${m.sender.split('@')[0]}`).replace('@group', await sock.getName(id)).replace('@desc', meta.desc);
+					let Welcome = db.data.chats[m.from]?.customWel;
+					let teks = Welcome.replace('@user', `@${m.sender.split('@')[0]}`).replace('@group', await sock.getName(m.from)).replace('@desc', meta.desc);
 					await m.reply(teks.trim());
 					await m.react('⛩️');
 				} else if(/bye|despedida/.test(m.args[0])) {
-					let Bye = db.data.chats[id]?.customBye;
-					let teks = Bye.replace('@user', `@${m.sender.split('@')[0]}`).replace('@group', await sock.getName(id)).replace('@desc', meta.desc);
+					let Bye = db.data.chats[m.from]?.customBye;
+					let teks = Bye.replace('@user', `@${m.sender.split('@')[0]}`).replace('@group', await sock.getName(m.from)).replace('@desc', meta.desc);
 					await reply(teks.trim());
 					await m.react('⛩️');
-				};
+				} else m.reply('*⛩️ Utilice welcome o bye para testear las funciones.*');
 			};
 			break;
 
