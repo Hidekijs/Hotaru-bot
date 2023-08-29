@@ -12,8 +12,8 @@ const updateMessages = async(sock, m, store) => {
 		await dataBase(sock, m, db);
 		await sock.metaData();
 
-		let metadata = sock.chats[m.from] ? sock.chats[m.from] : await sock.groupMetadata(m.from).catch(_ => {});
-		let groupAdmins = await getAdmins(metadata.participants);
+		let meta = db.data.metadata[m.from];
+		let groupAdmins = await sock.getAdmins(m.from);
 
 		///[ BASE DE DATOS ]///
 		let isAntilink = m.data(m.from)?.antilink || db.data.chats[m.from]?.antilink
@@ -23,11 +23,10 @@ const updateMessages = async(sock, m, store) => {
 		let isMute = m.data(m.from)?.mute || db.data.chats[m.from]?.mute
 
 		if (isAntilink) {
-			let code = m.data(m.from).code || db.data.chats[m.from].code;
 			let body = m.body.trim().toLowerCase();
 			let isLink = db.data.chats[m.from].link.some(letter => body.includes(letter));
 			if (isLink) {
-				if (m.body.includes('https://chat.whatsapp.com/' + code)) return m.react('🧐');
+				if (m.body.includes('https://chat.whatsapp.com/' + meta.code)) return m.react('🧐');
 				if (m.fromMe) return;
 				if (m.isOwner) return;
 				if (m.isAdmin && !m.isOwner) {

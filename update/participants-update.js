@@ -28,6 +28,7 @@ const updateParticipants = async(sock, { id, participants, action }) => {
 		let isWelcome = db.data?.chats[id]?.welcome;
 		let isAntifake = db.data?.chats[id]?.antifake;
 		let dataFake = db.data?.chats[id]?.fake;
+		let meta = db.data.metadata[id];
 		let id1 = participants[0]
 		let id2 = participants[1] || null
 
@@ -49,8 +50,8 @@ const updateParticipants = async(sock, { id, participants, action }) => {
 				if (isAntifake) await FakeFunction(id1);
 				if (isWelcome) {
 					let Welcome = db.data.chats[id]?.customWel;
-					let res = Welcome.replace('@user', '@' + id1.split`@`[0]).replace('@group', await sock.getName(id));
-					await m.reply(res.trim());
+					let res = Welcome.replace('@user', '@' + id1.split`@`[0]).replace('@group', await sock.getName(id)).replace('@desc', meta.desc);
+					await reply(res.trim());
 				}
 			};
 			break;
