@@ -162,15 +162,33 @@ const updateMessages = async(sock, m, store) => {
 			case 'setbye':
 			case 'setwelcome':{
 				if (!m.isAdmin) return m.reply('*⛩️ Esta funcion es solo para los administradores.*');
+				if (!isWelcome) return m.reply('*⛩️ Esta funcion no funciona si no esta la bienvenida encendida.*');
 				if ('setwelcome' == m.command) {
 					if (!m.text) return m.reply('*⛩️ Ingrese una bienvenida que quiere que muestre. Los valores que se pueden reemplazar son "@user"-"@group"-"@desc".*');
 					m.data(m.from).customWel = m.text.trim();
 					await m.reply('*⛩️ Se modifico la bienvenida de este grupo.*');
 					await m.react('⛩️');
 				} else if('setbye' == m.command) {
-					if (!m.text) return m.reply('*⛩️ Ingrese una despedia que quiere que muestre. Los valores que se pueden reemplazar son "@user"-"@group"-"@desc".*');
+					if (!m.text) return m.reply('*⛩️ Ingrese una despedida que quiere que muestre. Los valores que se pueden reemplazar son "@user"-"@group"-"@desc".*');
 					m.data(m.from).customBye = m.text.trim();
 					await m.reply('*⛩️ Se modifico la despedida de este grupo.*');
+					await m.react('⛩️');
+				};
+			};
+			break;
+
+			case 'test':{
+				if (!m.isAdmin) return m.reply('*⛩️ Esta funcion es solo para los administradores.*');
+				if (!isWelcome) return m.reply('*⛩️ Esta funcion no funciona si no esta la bienvenida encendida.*');
+				if (/welcome|wel|bienvenida/.test(m.args[0])) {
+					let Welcome = db.data.chats[id]?.customWel;
+					let teks = Welcome.replace('@user', `@${m.sender.split('@')[0]}`).replace('@group', await sock.getName(id)).replace('@desc', meta.desc);
+					await m.reply(teks.trim());
+					await m.react('⛩️');
+				} else if(/bye|despedida/.test(m.args[0])) {
+					let Bye = db.data.chats[id]?.customBye;
+					let teks = Bye.replace('@user', `@${m.sender.split('@')[0]}`).replace('@group', await sock.getName(id)).replace('@desc', meta.desc);
+					await reply(teks.trim());
 					await m.react('⛩️');
 				};
 			};
