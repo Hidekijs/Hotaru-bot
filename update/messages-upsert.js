@@ -10,6 +10,7 @@ const updateMessages = async(sock, m, store) => {
 		let v = m.quoted ? m.quoted : m;
 
 		await dataBase(sock, m, db);
+		await sock.metaData();
 
 		let metadata = sock.chats[m.from] ? sock.chats[m.from] : await sock.groupMetadata(m.from).catch(_ => {});
 		let groupAdmins = await getAdmins(metadata.participants);

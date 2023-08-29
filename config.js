@@ -43,6 +43,7 @@ global.updateParticipants = updateParticipants;
 global.db = new Low(new JSONFile('db.json'), {
 	chats: {},
 	users: {},
+	metadata: {},
 	settings: {}
 });
 
