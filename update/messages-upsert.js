@@ -188,7 +188,7 @@ const updateMessages = async(sock, m, store) => {
 				} else if(/bye|despedida/.test(m.args[0])) {
 					let Bye = db.data.chats[m.from]?.customBye;
 					let teks = Bye.replace('@user', `@${m.sender.split('@')[0]}`).replace('@group', await sock.getName(m.from)).replace('@desc', meta.desc);
-					await reply(teks.trim());
+					await m.reply(teks.trim());
 					await m.react('⛩️');
 				} else m.reply('*⛩️ Utilice welcome o bye para testear las funciones.*');
 			};
