@@ -17,6 +17,7 @@ const updateMessages = async(sock, m, store) => {
 		///[ BASE DE DATOS ]///
 		let isAntilink = m.data(m.from)?.antilink || db.data.chats[m.from]?.antilink
 		let isAntifake = m.data(m.from)?.antifake || db.data.chats[m.from]?.antifake
+		let isWelcome = m.data(m.from).welcome || db.data.chats[m.from]?.welcome;
 		let isBadWord = m.data(m.from)?.badword || db.data.chats[m.from]?.badword
 		let isMute = m.data(m.from)?.mute || db.data.chats[m.from]?.mute
 
@@ -138,6 +139,39 @@ const updateMessages = async(sock, m, store) => {
 					let posi = data.indexOf(numero);
 					data.splice(posi, 1);
 					await m.reply('*⛩️ El prefijo ' + numero + ' se elimino de la lista, todos esos numero ingresaran con normalidad.*');
+					await m.react('⛩️');
+				};
+			};
+			break;
+
+			case 'welcome':{
+				if (!m.isAdmin) return m.reply('*⛩️ Esta funcion es solo para los administradores.*');
+				if (/activar|true|on/.test(m.args[0])) {
+					if (isWelcome) return m.reply('*⛩️ Esta funcion esta activa en este grupo.*');
+					m.data(m.from).welcome = true;
+					await m.reply('*⛩️ Se activo la bienvenida. Si desea modificarla utilice setwelcome o setbye.*');
+					await m.react('⛩️');
+				} else if (/false|desactivar|off/.test(m.args[0])) {
+					if (!isWelcome) return m.reply('*⛩️ Esta funcion esta desactivada en este grupo.*');
+					m.data(m.from).welcome = false;
+					await m.reply('*⛩️ Se desactivo la bienvenida en este grupo.*');
+					await m.react('⛩️');
+				} else m.reply('*⛩️ Utilice activar o desactivar para interactuar con esta funcion.*');
+			};
+			break;
+
+			case 'setbye':
+			case 'setwelcome':{
+				if (!m.isAdmin) return m.reply('*⛩️ Esta funcion es solo para los administradores.*');
+				if ('setwelcome' == m.command) {
+					if (!m.text) return m.reply('*⛩️ Ingrese una bienvenida que quiere que muestre. Los valores que se pueden reemplazar son "@user"-"@group"-"@desc".*');
+					m.data(m.from).customWel = m.text.trim();
+					await m.reply('*⛩️ Se modifico la bienvenida de este grupo.*');
+					await m.react('⛩️');
+				} else if('setbye' == m.command) {
+					if (!m.text) return m.reply('*⛩️ Ingrese una despedia que quiere que muestre. Los valores que se pueden reemplazar son "@user"-"@group"-"@desc".*');
+					m.data(m.from).customBye = m.text.trim();
+					await m.reply('*⛩️ Se modifico la despedida de este grupo.*');
 					await m.react('⛩️');
 				};
 			};
