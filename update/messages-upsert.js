@@ -9,8 +9,7 @@ const updateMessages = async(sock, m, store) => {
 	try {
 		let v = m.quoted ? m.quoted : m;
 
-		await dataBase(sock, m, db);
-		await sock.metaData();
+		await dataBase(sock, m, db); await sock.metaData(); await sock.readMessages([m.key]);
 
 		let meta = db.data.metadata[m.from];
 		let groupAdmins = await sock.getAdmins(m.from);
@@ -58,7 +57,7 @@ const updateMessages = async(sock, m, store) => {
 				await sock.groupParticipantsUpdate(m.from, [user], 'remove');
 				await m.reply('*⛩️ El usuario @' + user.split`@`[0] + ' ya no forma parte del grupo.*');
 				await m.react('⛩️');
-			}
+			};
 			break;
 
 			case 'antilink':{

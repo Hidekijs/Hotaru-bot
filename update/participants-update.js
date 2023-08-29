@@ -8,6 +8,8 @@ const updateParticipants = async(sock, { id, participants, action }) => {
 		const reply = async(text, options = {}) => {
 			let p = [1, 0]
 			p = p[Math.floor(Math.random() * p.length)];
+			await sock.sendPresenceUpdate('composing', id);
+			await delay(1500);
 			return await sock.sendMessage(options.id ? options.id : id, {
 				text: text,
 				contextInfo: {
