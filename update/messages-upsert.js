@@ -25,15 +25,15 @@ const updateMessages = async(sock, m, store) => {
 			let exec = /https?:\/\/|chat.whatsapp.com\/(?:invite\/)?([0-9A-Za-z]{20,24})|wa.me\/?([0-9])|t.me\/?([0-9])/gi
 			let isLink = exec.test(m.body.trim());
 			if (isLink) {
-				//if (m.body.includes('https://chat.whatsapp.com/' + meta.code)) return m.react('🧐');
-				//if (m.fromMe) return;
-				//if (m.isOwner) return;
-				/*if (m.isAdmin && !m.isOwner) {
+				if (m.body.includes('https://chat.whatsapp.com/' + meta.code)) return m.react('🧐');
+				if (m.fromMe) return;
+				if (m.isOwner) return;
+				if (m.isAdmin && !m.isOwner) {
 					await m.delete();
 					return await m.reply('*⛩️ Stupid admin no envies links prohibidos da el ejemplo.*');
 				};
 				await sock.groupParticipantsUpdate(m.from, [m.sender], 'remove');
-				await m.delay(1500);*/
+				await m.delay(1500);
 				await m.delete();
 				await m.reply('*⛩️ Su mensaje contiene un link prohibido fue eliminado su mensaje junto con el remitente*');
 			};
@@ -51,7 +51,6 @@ const updateMessages = async(sock, m, store) => {
 				if (sock.user.jid == user) return m.reply('*⛩️ No puedo autoeliminarme.*');
 				if (groupAdmins.includes(user) && !m.isOwner) return m.reply('*⛩️ Mis permisos no me permiten eliminar a otro administrador.*');
 				if (user == m.sender) return m.reply('*⛩️ No puedes autoeliminarte.*')
-				if (m.isOwner) await m.reply('*⛩️ Ejecutando comando con privilegios SUPER USUARIO.*');
 				await sock.groupParticipantsUpdate(m.from, [user], 'remove');
 				await m.reply('*⛩️ El usuario @' + user.split`@`[0] + ' ya no forma parte del grupo.*');
 				await m.react('⛩️');
@@ -65,7 +64,7 @@ const updateMessages = async(sock, m, store) => {
 				if (/true|activar|on/.test(m.args[0])) {
 					if (isAntilink) return m.reply('*⛩️ Esta funcion esta activa en este grupo.*');
 					m.data(m.from).antilink = true;
-					await m.reply('*⛩️ Se activo el antilink correctamente. Para agregar links use addlink o de lo contrario use delink.*');
+					await m.reply('*⛩️ Se activo el antilink correctamente. Se prohibe cualquier tipo de url.*');
 					await m.react('⛩️');
 				} else if (/false|desactivar|off/.test(m.args[0])) {
 					if (!isAntilink) return m.reply('*⛩️ Esta funcion esta desactivada en este grupo.*');
@@ -74,29 +73,6 @@ const updateMessages = async(sock, m, store) => {
 					await m.react('⛩️');
 				} else m.reply('*⛩️ Utilice on/off para interactuar con esta funcion.*');
  			};
-			break;
-
-			case 'addlink':
-			case 'delink': {
-				if (!m.isBotAdmin) return m.reply('*⛩️ No se puede usar esta funcion si no soy administrador.*');
-				if (!m.isAdmin) return m.reply('*⛩️ Esta funcion es solo para los administradores.*');
-				if (!isAntilink) return m.reply('*⛩️ La funcion antilink esta desactivada sin esa funcion activa esto no puede funcionar.*');
-				if (!m.text) return m.reply('*⛩️ No se registro ningun link. Use ' + m.prefix + m.command + ' https://link*');
-				let link = m.text.startsWith('https://') ? m.text : 'https://' + m.text;
-				let data = m.data(m.from)?.link || db.data.chats[m.from]?.link
-				if (m.command == 'addlink') {
-					if (data.includes(link)) return m.reply('*⛩️ Este elemento ya se encuentra en la lista.*');
-					data.push(link);
-					await m.reply('*⛩️ Se agrego ' + link + ' a la lista de url`s prohibidas.*');
-					await m.react('⛩️');
-				} else if (m.command == 'delink') {
-					if (!data.includes(link)) return m.reply('*⛩️ Este elemento no se encuentra en la lista.*');
-					let posi = data.indexOf(link);
-					data.splice(posi, 1);
-					await m.reply('*⛩️ Se elimino ' + link + ' de la lista de url`s prohibidas.*');
-					await m.react('⛩️');
-				};
-			};
 			break;
 
 			case 'antifake':

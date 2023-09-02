@@ -4,6 +4,7 @@ import { parsePhoneNumber } from 'libphonenumber-js';
 
 const updateParticipants = async(sock, { id, participants, action }) => {
 	try {
+		console.log(participants);
 		const delay = async timeout => { return new Promise( (resolve) => setTimeout(resolve, timeout) ) }
 		const reply = async(text, options = {}) => {
 			let p = [1, 0]
@@ -54,7 +55,6 @@ const updateParticipants = async(sock, { id, participants, action }) => {
 		switch(action) {
 
 			case 'add':{
-				if (isAntifake) await FakeFunction(id1);
 				if (isWelcome) {
 					let Welcome = db.data.chats[id]?.customWel;
 					let teks = Welcome.replace('@user', '@' + id1.split`@`[0]).replace('@group', await sock.getName(id)).replace('@desc', meta.desc);
@@ -65,6 +65,7 @@ const updateParticipants = async(sock, { id, participants, action }) => {
 
 			case 'remove':{
 				if (isWelcome){
+					if (id2 == sock.user.jid) return;
 					let Bye = db.data.chats[id]?.customBye;
 					let teks = Bye.replace('@user', `@${id1.split('@')[0]}`).replace('@group', await sock.getName(id)).replace('@desc', meta.desc);
 					await reply(teks.trim());
