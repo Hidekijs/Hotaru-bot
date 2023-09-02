@@ -51,7 +51,7 @@ const updateParticipants = async(sock, { id, participants, action }) => {
 			case 'add':{
 				if (isWelcome) {
 					let Welcome = db.data.chats[id]?.customWel;
-					let teks = Welcome.replace('@user', '@' + id1.split`@`[0]).replace('@group', await sock.getName(id)).replace('@desc', meta.desc);
+					let teks = Welcome.replace('@user', '@' + sender.split`@`[0]).replace('@group', await sock.getName(id)).replace('@desc', meta.desc);
 					await reply(teks.trim());
 				};
 			};
@@ -61,7 +61,7 @@ const updateParticipants = async(sock, { id, participants, action }) => {
 				if (isWelcome){
 					if (sender2 == sock.user.jid) return;
 					let Bye = db.data.chats[id]?.customBye;
-					let teks = Bye.replace('@user', `@${id1.split('@')[0]}`).replace('@group', await sock.getName(id)).replace('@desc', meta.desc);
+					let teks = Bye.replace('@user', `@${sender.split('@')[0]}`).replace('@group', await sock.getName(id)).replace('@desc', meta.desc);
 					await reply(teks.trim());
 				};
 			};
