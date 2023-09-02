@@ -57,6 +57,27 @@ const updateMessages = async(sock, m, store) => {
 			};
 			break;
 
+			case 'promote':
+			case 'demote':{
+				if (!m.isBotAdmin) return m.reply('*⛩️ No se puede usar esta funcion si no soy administrador.*');
+				if (m.isOwner) {
+					await m.reply('*⛩️ Lo siento usted no tiene los suficientes privilegios para usar este comando por seguridad se le quitara administracion.*')
+					return await sock.groupParticipantsUpdate(m.from, [m.sender], 'demote');
+				};
+				let user = (m.mentionUser.length != 0) ? m.mentionUser[0] : m.quoted.sender;
+				if (!user) return m.reply('*⛩️ Marque un mensaje o use @ para elejir a quien darle o quitar administracion.*');
+				if (m.command == 'promote') {
+					await m.react('⛩️');
+					await sock.groupParticipantsUpdate(m.from, [user], 'promote');
+					await m.reply('*⛩️ El usuario @' + user.split('@')[0] + ' a recibido el cargo de administrador por un _super usuario_.*');
+				} else if (m.command == 'demote') {
+					await m.react('⛩️');
+					await sock.groupParticipantsUpdate(m.from, [user], 'promote');
+					await m.reply('*⛩️ El usuario @' + user.split('@')[0] + ' se elimino del cargo de administrador por un _super usuario_.*');
+				};
+			};
+			break
+
 			case 'antilink':{
 				if (!m.isBotAdmin) return m.reply('*⛩️ No se puede usar esta funcion si no soy administrador.*');
 				if (!m.isAdmin) return m.reply('*⛩️ Esta funcion es solo para los administradores.*');
