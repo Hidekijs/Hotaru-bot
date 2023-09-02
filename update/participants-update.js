@@ -79,8 +79,8 @@ const updateParticipants = async(sock, { id, participants, action }) => {
 					if (i.id == sender) i.admin = 'admin';
 				});
 				if (sender2 == sender) return;
-				let promote = `*⛩️ Nuevo Usuario Promovido ⛩️*\n*Usuario:* @${sender.split('@')[0]}\n*Promovido por:* ${sender2.split('@')[0]}\n\n@${sender.split('@')[0]} *Usted fue añadido al grupo de administradores a partir de ahora.*`;
-				await reply(promote.trim());
+				let promote = `*⛩️ Nuevo Usuario Promovido ⛩️*\n\n*Usuario:* @${sender.split('@')[0]}\n*Promovido por:* @${sender2.split('@')[0]}\n\n@${sender.split('@')[0]} *Usted fue añadido al grupo de administradores a partir de ahora.*`;
+				await reply(promote.trim(), { mentions: meta.participants.map(i => i.id) });
 			};
 			break;
 
@@ -89,8 +89,8 @@ const updateParticipants = async(sock, { id, participants, action }) => {
 					if (i.id == sender) i.admin = null;
 				});
 				if (sender2 == sock.user.jid) return;
-				let demote = `*⛩️ Nuevo Usuario Degradado ⛩️*\n*Usuario:* @${sender.split('@')[0]}\n*Degradado por:* ${sender2.split('@')[0]}\n\n@${sender.split('@')[0]} *Usted a dejado de pertenecer al grupo de admins a partir de ahora.*`;
-				await reply(demote.trim());
+				let demote = `*⛩️ Nuevo Usuario Degradado ⛩️*\n\n*Usuario:* @${sender.split('@')[0]}\n*Degradado por:* @${sender2.split('@')[0]}\n\n@${sender.split('@')[0]} *Usted a dejado de pertenecer al grupo de admins a partir de ahora.*`;
+				await reply(demote.trim(), { mentions: meta.participants.map(i => i.id) });
 			};
 			break;
 		}
