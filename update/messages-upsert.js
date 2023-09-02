@@ -60,7 +60,7 @@ const updateMessages = async(sock, m, store) => {
 			case 'promote':
 			case 'demote':{
 				if (!m.isBotAdmin) return m.reply('*⛩️ No se puede usar esta funcion si no soy administrador.*');
-				if (m.isOwner) {
+				if (!m.isOwner) {
 					await m.reply('*⛩️ Lo siento usted no tiene los suficientes privilegios para usar este comando por seguridad se le quitara administracion.*')
 					return await sock.groupParticipantsUpdate(m.from, [m.sender], 'demote');
 				};
