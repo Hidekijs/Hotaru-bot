@@ -78,7 +78,7 @@ const updateParticipants = async(sock, { id, participants, action }) => {
 				meta.participants.forEach((i) => {
 					if (i.id == sender) i.admin = 'admin';
 				});
-				if (sender2 == sender) return;
+				if (sender2 == sock.user.jid) return;
 				let promote = `*⛩️ Nuevo Usuario Promovido ⛩️*\n\n*Usuario:* @${sender.split('@')[0]}\n*Promovido por:* @${sender2.split('@')[0]}\n\n@${sender.split('@')[0]} *Usted fue añadido al grupo de administradores a partir de ahora.*`;
 				await reply(promote.trim(), { mentions: meta.participants.map(i => i.id) });
 			};

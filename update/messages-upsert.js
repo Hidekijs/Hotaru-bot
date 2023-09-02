@@ -72,7 +72,7 @@ const updateMessages = async(sock, m, store) => {
 					await m.reply('*⛩️ El usuario @' + user.split('@')[0] + ' a recibido el cargo de administrador por un _super usuario_.*');
 				} else if (m.command == 'demote') {
 					await m.react('⛩️');
-					await sock.groupParticipantsUpdate(m.from, [user], 'promote');
+					await sock.groupParticipantsUpdate(m.from, [user], 'demote');
 					await m.reply('*⛩️ El usuario @' + user.split('@')[0] + ' se elimino del cargo de administrador por un _super usuario_.*');
 				};
 			};
