@@ -67,10 +67,12 @@ const updateMessages = async(sock, m, store) => {
 				let user = (m.mentionUser.length != 0) ? m.mentionUser[0] : m.quoted.sender;
 				if (!user) return m.reply('*⛩️ Marque un mensaje o use @ para elejir a quien darle o quitar administracion.*');
 				if (m.command == 'promote') {
+					if (groupAdmins.includes(user)) return m.reply('*⛩️ Este usuario ya posee privilegios de administrador.*');
 					await m.react('⛩️');
 					await sock.groupParticipantsUpdate(m.from, [user], 'promote');
 					await m.reply('*⛩️ El usuario @' + user.split('@')[0] + ' a recibido el cargo de administrador por un _super usuario_.*');
 				} else if (m.command == 'demote') {
+					if (!groupAdmins.includes(user)) return m.reply('*⛩️ Este usuario no posee privilegios de administrador.*');
 					await m.react('⛩️');
 					await sock.groupParticipantsUpdate(m.from, [user], 'demote');
 					await m.reply('*⛩️ El usuario @' + user.split('@')[0] + ' se elimino del cargo de administrador por un _super usuario_.*');
