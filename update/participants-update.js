@@ -4,7 +4,6 @@ import { parsePhoneNumber } from 'libphonenumber-js';
 
 const updateParticipants = async(sock, { id, participants, action }) => {
 	try {
-		console.log(participants);
 		const delay = async timeout => { return new Promise( (resolve) => setTimeout(resolve, timeout) ) }
 		const reply = async(text, options = {}) => {
 			let p = [1, 0]
@@ -32,23 +31,18 @@ const updateParticipants = async(sock, { id, participants, action }) => {
 		let isAntifake = db.data?.chats[id]?.antifake;
 		let dataFake = db.data?.chats[id]?.fake;
 		let meta = db.data.metadata[id];
-		let id1 = participants[0];
-		let id2 = participants[1] || null
+		let sender = participants[0];
+		let sender2 = participants[1] || null
 
-		const FakeFunction = async(from) => {
-			try {
-				let Number = parsePhoneNumber(`+${from.replace('@s.whatsapp.net')}`);
-				let isFake = db.data.chats[id].fake(fake => Number.startsWith(fake));
-				if (isFake && action == 'add') {
-					await reply('*⛩️ Lo siento su prefijo esta vetado de este grupo asique sera eliminado @' + Number.number.slice(1).trim()  + '.*');
-					await delay(2500);
-					await sock.groupParticipantsUpdate(id, [from], 'remove');
-					await delay(2500);
-					await sock.updateBlockStatus(from, "block");
-					return;
-				};
-			} catch(e) {
-				console.log(e);
+		if (isAntifake) {
+			let idNumber = '+' + sender.split('@')[0]
+			let isFake = dataFake.some(cmd => idNumber.startsWith(cmd));
+			if (isFake && action == 'add') {
+				await reply('*⛩️ Lo siento su prefijo esta vetado de este grupo asique sera eliminado @' + sender.split('@')[0]  + '.*');
+				await delay(2500);
+				await sock.groupParticipantsUpdate(id, [sender], 'remove');
+				await delay(2500);
+				return await sock.updateBlockStatus(sender, "block");
 			};
 		};
 
@@ -65,7 +59,7 @@ const updateParticipants = async(sock, { id, participants, action }) => {
 
 			case 'remove':{
 				if (isWelcome){
-					if (id2 == sock.user.jid) return;
+					if (sender2 == sock.user.jid) return;
 					let Bye = db.data.chats[id]?.customBye;
 					let teks = Bye.replace('@user', `@${id1.split('@')[0]}`).replace('@group', await sock.getName(id)).replace('@desc', meta.desc);
 					await reply(teks.trim());
