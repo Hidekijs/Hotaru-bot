@@ -22,17 +22,17 @@ const updateMessages = async(sock, m, store) => {
 		let isMute = m.data(m.from)?.mute || db.data.chats[m.from]?.mute
 
 		if (isAntilink) {
-			let body = m.body.trim().toLowerCase();
-			let isLink = db.data.chats[m.from].link.some(letter => body.includes(letter));
+			let exec = /https?:\/\/(www\.)|chat.whatsapp.com\/(?:invite\/)?([0-9A-Za-z]{20,24})|wa.me\/?([0-9])|t.me\/?([0-9])/gi
+			let isLink = exec.test(m.body.trim());
 			if (isLink) {
-				if (m.body.includes('https://chat.whatsapp.com/' + meta.code)) return m.react('🧐');
-				if (m.fromMe) return;
-				if (m.isOwner) return;
-				if (m.isAdmin && !m.isOwner) {
+				//if (m.body.includes('https://chat.whatsapp.com/' + meta.code)) return m.react('🧐');
+				//if (m.fromMe) return;
+				//if (m.isOwner) return;
+				/*if (m.isAdmin && !m.isOwner) {
 					await m.delete();
 					return await m.reply('*⛩️ Stupid admin no envies links prohibidos da el ejemplo.*');
-				};
-				await sock.groupParticipantsUpdate(m.from, [m.sender], 'remove');
+				};*/
+//				await sock.groupParticipantsUpdate(m.from, [m.sender], 'remove');
 				await m.delay(1500);
 				await m.delete();
 				await m.reply('*⛩️ Su mensaje contiene un link prohibido fue eliminado su mensaje junto con el remitente*', { adreply: true });
