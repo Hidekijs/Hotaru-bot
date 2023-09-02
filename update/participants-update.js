@@ -49,6 +49,7 @@ const updateParticipants = async(sock, { id, participants, action }) => {
 		switch(action) {
 
 			case 'add':{
+				meta.participants.push({ id: sender, admin: null });
 				if (isWelcome) {
 					let Welcome = db.data.chats[id]?.customWel;
 					let teks = Welcome.replace('@user', '@' + sender.split`@`[0]).replace('@group', await sock.getName(id)).replace('@desc', meta.desc);
@@ -58,6 +59,12 @@ const updateParticipants = async(sock, { id, participants, action }) => {
 			break;
 
 			case 'remove':{
+				meta.participants.forEach((i) => {
+					if (i.id == sender) {
+						let index = meta.participants.indexOf(i);
+						meta.participants.splice(index, 1);
+					};
+				})
 				if (isWelcome){
 					if (sender2 == sock.user.jid) return;
 					let Bye = db.data.chats[id]?.customBye;
@@ -68,12 +75,22 @@ const updateParticipants = async(sock, { id, participants, action }) => {
 			break;
 
 			case 'promote':{
-
+				meta.participants.forEach((i) => {
+					if (i.id == sender) i.admin = 'admin';
+				});
+				if (sender2 == sender) return;
+				let promote = `*⛩️ Nuevo Usuario Promovido ⛩️*\n*Usuario:* @${sender.split('@')[0]}\n*Promovido por:* ${sender2.split('@')[0]}\n\n@${sender.split('@')[0]} *Usted fue añadido al grupo de administradores a partir de ahora.*`;
+				await reply(promote.trim());
 			};
 			break;
 
 			case 'demote':{
-
+				meta.participants.forEach((i) => {
+					if (i.id == sender) i.admin = null;
+				});
+				if (sender2 == sock.user.jid) return;
+				let demote = `*⛩️ Nuevo Usuario Degradado ⛩️*\n*Usuario:* @${sender.split('@')[0]}\n*Degradado por:* ${sender2.split('@')[0]}\n\n@${sender.split('@')[0]} *Usted a dejado de pertenecer al grupo de admins a partir de ahora.*`;
+				await reply(demote.trim());
 			};
 			break;
 		}
