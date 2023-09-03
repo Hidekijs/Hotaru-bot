@@ -4,28 +4,19 @@ import { parsePhoneNumber } from 'libphonenumber-js';
 
 const updateParticipants = async({sock, id, participants, action }) => {
 	try {
-		console.log({sock, id, participants, action })
 		const delay = async timeout => { return new Promise( (resolve) => setTimeout(resolve, timeout) ) }
-		const reply = async(text, options = {}) => {
+		
+		let reply = async(text = "", options = {}) {
 			let p = [1, 0]
 			p = p[Math.floor(Math.random() * p.length)];
-			await sock.sendPresenceUpdate('composing', id);
-			await delay(1500);
-			return await sock.sendMessage(options.id ? options.id : id, {
-				text: text,
-				contextInfo: {
-					mentionedJid: options.mentions ? options.mentions : sock.parseMention(text),
-					externalAdReply: {
-						renderLargerThumbnail: options.render ? options.render : false,
-						showAdAttribution: options.adAttrib ? options.adAttrib : false,
-						title: (p == 1) ? '⛩️¡Seguínos en instagram!⛩️' : '⛩️¡Seguínos en Facebook!⛩️',
-						body: options.body ? options.body : await sock.getName(id),
-						mediaType: 1,
-						thumbnailUrl: options.img ? options.img : 'https://telegra.ph/file/7c88adc390f833300232f.jpg',
-						sourceUrl: (p == 1) ? 'https://instagram.com/hotaru.ofc?igshid=NzZhOTFlYzFmZQ==' : 'https://www.facebook.com/Somoshotaru?mibextid=ZbWKwL'
-					}
-				}
-			});
+			return await sock.sendText(id, text, {
+				mentions: options.mentions ? options.mentions : sock.parseMention(text),
+				ads: true,
+				title: (p == 1) ? '⛩️¡Seguínos en instagram!⛩️' : '⛩️¡Seguínos en Facebook!⛩️',
+				body: await sock.getName(id),
+				image: 'https://telegra.ph/file/7c88adc390f833300232f.jpg',
+				url: (p == 1) ? 'https://instagram.com/hotaru.ofc?igshid=NzZhOTFlYzFmZQ==' : 'https://www.facebook.com/Somoshotaru?mibextid=ZbWKwL'
+			})
 		};
 
 		let isWelcome = db.data?.chats[id]?.welcome;
