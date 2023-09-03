@@ -2,7 +2,7 @@ import "../config.js";
 import { parsePhoneNumber } from 'libphonenumber-js';
 
 
-const updateParticipants = async(sock, { id, participants, action }) => {
+const updateParticipants = async({sock, id, participants, action }) => {
 	try {
 		const delay = async timeout => { return new Promise( (resolve) => setTimeout(resolve, timeout) ) }
 		const reply = async(text, options = {}) => {
