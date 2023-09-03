@@ -27,14 +27,11 @@ const updateParticipants = async({sock, id, participants, action }) => {
 		let sender = participants[0];
 		let sender2 = participants[1] || null
 
-		console.log(parsePhoneNumber(`+${sender.split('@')[0]}`))
-
-
 		if (isAntifake) {
-			let idNumber = '+' + sender.split('@')[0]
-			let isFake = dataFake.some(cmd => idNumber.startsWith(cmd));
+			let phoneNumber = parsePhoneNumber(`+${sender.split('@')[0]}`)
+			let isFake = dataFake.some(cmd => phoneNumber.number.startsWith(cmd));
 			if (isFake && action == 'add') {
-				await reply('*⛩️ Lo siento el prefijo esta vetado de este grupo asique sera eliminado @' + sender.split('@')[0]  + '.*');
+				await reply('*⛩️ Lo siento el prefijo +' + phoneNumber.countryCallingCode + ' no esta permitido en este grupo, asique sera eliminado @' + sender.split('@')[0]  + '.*');
 				await delay(2500);
 				await sock.groupParticipantsUpdate(id, [sender], 'remove');
 				await delay(2500);
