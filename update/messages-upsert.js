@@ -195,7 +195,7 @@ const updateMessages = async({sock, m}) => {
 
 			///[ OWNERS Y MDOS ]///
 
-			case "join"
+			case "join":
 			case "unirse":{
 				if (!m.isOwner) return m.reply("*⛩️ Lo siento esto es una funcion exclusiva para moderadores y el dev.*");
 				if (!m.text) return m.reply("*⛩️ Ingrese un link de invitacion para poder unirme al grupo.*");
