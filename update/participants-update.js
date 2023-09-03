@@ -27,7 +27,7 @@ const updateParticipants = async({sock, id, participants, action }) => {
 		let sender = participants[0];
 		let sender2 = participants[1] || null
 
-		console.log(parsePhoneNumber(sender))
+		console.log(parsePhoneNumber(`+${sender.split('@')[0]}`))
 
 
 		if (isAntifake) {
