@@ -46,7 +46,7 @@ const updateMessages = async({sock, m}) => {
 			case 'eliminar': {
 				if (!m.isBotAdmin) return m.reply('*⛩️ No se puede usar esta funcion si no soy administrador.*');
 				if (!m.isAdmin) return m.reply('*⛩️ Esta funcion es solo para los administradores.*');
-				if (m.mentionedJid.length == 0) return m.reply('*⛩️ Marque un mensaje o use @ para elejir a quien eliminar.*');
+				if (m.mentionedJid.length == 0) return m.reply('*⛩️ Marque un mensaje o use @ para elegir a quien eliminar.*');
 				let user = m.mentionedJid && m.mentionedJid[0] || m.quoted.sender;
 				if (sock.user.jid == user) return m.reply('*⛩️ No puedo autoeliminarme.*');
 				if (groupAdmins.includes(user) && !m.isOwner) return m.reply('*⛩️ Mis permisos no me permiten eliminar a otro administrador.*');
@@ -66,7 +66,7 @@ const updateMessages = async({sock, m}) => {
 					return await sock.groupParticipantsUpdate(m.from, [m.sender], 'demote');
 				};
 				let user = (m.mentionedJid.length != 0) ? m.mentionedJid[0] : m.quoted.sender;
-				if (!user) return m.reply('*⛩️ Marque un mensaje o use @ para elejir a quien darle o quitar administracion.*');
+				if (!user) return m.reply('*⛩️ Marque un mensaje o use @ para elegir a quien darle o quitar administracion.*');
 				if (m.command == 'promote') {
 					if (groupAdmins.includes(user)) return m.reply('*⛩️ Este usuario ya posee privilegios de administrador.*');
 					await m.react('⛩️');
@@ -84,7 +84,7 @@ const updateMessages = async({sock, m}) => {
 			case 'antilink':{
 				if (!m.isBotAdmin) return m.reply('*⛩️ No se puede usar esta funcion si no soy administrador.*');
 				if (!m.isAdmin) return m.reply('*⛩️ Esta funcion es solo para los administradores.*');
-				if (!m.mentionedJid && !m.quoted) return m.reply('*⛩️ Marque un mensaje o use @ para elejir a quien eliminar.*');
+				if (!m.mentionedJid && !m.quoted) return m.reply('*⛩️ Marque un mensaje o use @ para elegir a quien eliminar.*');
 				if (/true|activar|on/.test(m.args[0])) {
 					if (isAntilink) return m.reply('*⛩️ Esta funcion esta activa en este grupo.*');
 					m.data(m.from).antilink = true;

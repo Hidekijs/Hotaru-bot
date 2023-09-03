@@ -4,6 +4,7 @@ import { parsePhoneNumber } from 'libphonenumber-js';
 
 const updateParticipants = async({sock, id, participants, action }) => {
 	try {
+
 		const delay = async timeout => { return new Promise( (resolve) => setTimeout(resolve, timeout) ) }
 		
 		let reply = async(text = "", options = {}) => {
@@ -26,11 +27,14 @@ const updateParticipants = async({sock, id, participants, action }) => {
 		let sender = participants[0];
 		let sender2 = participants[1] || null
 
+		console.log(parsePhoneNumber(sender))
+
+
 		if (isAntifake) {
 			let idNumber = '+' + sender.split('@')[0]
 			let isFake = dataFake.some(cmd => idNumber.startsWith(cmd));
 			if (isFake && action == 'add') {
-				await reply('*⛩️ Lo siento su prefijo esta vetado de este grupo asique sera eliminado @' + sender.split('@')[0]  + '.*');
+				await reply('*⛩️ Lo siento el prefijo esta vetado de este grupo asique sera eliminado @' + sender.split('@')[0]  + '.*');
 				await delay(2500);
 				await sock.groupParticipantsUpdate(id, [sender], 'remove');
 				await delay(2500);
