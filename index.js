@@ -55,7 +55,7 @@ const start = async() => {
 		};
 	});
 
-	client.ev.on("messages.upsert", client.serealizeM);
+	client.ev.on("messages.upsert", client.serealizeMessage);
 
 	client.ev.on("serealize.message", updateMessages);
 
