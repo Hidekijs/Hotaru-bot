@@ -51,6 +51,7 @@ const start = async() => {
 				console.log(chalk.bgRed(`Error de desconexion desconocido: ${reason}||${connection}`))
 			};
 		} if (connection == "open") {
+			await sock.getMetadata;
 			console.log("Sistema en linea.");
 		};
 	});

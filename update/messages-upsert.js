@@ -5,22 +5,22 @@ import syntaxErr from 'syntax-error';
 import { dataBase } from '../lib/db.js';
 import { getAdmins } from '../lib/functions.js';
 
-const updateMessages = async(sock, m, store) => {
+const updateMessages = async({sock, m}) => {
 	try {
-		
+
 		let v = m.quoted ? m.quoted : m;
 
-		await dataBase(sock, m, db); await sock.metaData(); await sock.readMessages([m.key]);
+		await dataBase(sock, m, db); await sock.readMessages([m.key]);
 
-		let meta = db.data.metadata[m.from];
+		let meta = store.metadata[m.from];
 		let groupAdmins = await sock.getAdmins(m.from);
 
 		///[ BASE DE DATOS ]///
-		let isAntilink = m.data(m.from)?.antilink || db.data.chats[m.from]?.antilink
-		let isAntifake = m.data(m.from)?.antifake || db.data.chats[m.from]?.antifake
-		let isWelcome = m.data(m.from).welcome || db.data.chats[m.from]?.welcome;
-		let isBadWord = m.data(m.from)?.badword || db.data.chats[m.from]?.badword
-		let isMute = m.data(m.from)?.mute || db.data.chats[m.from]?.mute
+		let isAntilink = db.data.chats[m.from]?.antilink
+		let isAntifake = db.data.chats[m.from]?.antifake
+		let isWelcome = db.data.chats[m.from]?.welcome;
+		let isBadWord = db.data.chats[m.from]?.badword
+		let isMute = db.data.chats[m.from]?.mute
 
 		if (isAntilink) {
 			let exec = /https?:\/\/|chat.whatsapp.com\/(?:invite\/)?([0-9A-Za-z]{20,24})|wa.me\/?([0-9])|t.me\/?([0-9])/gi
