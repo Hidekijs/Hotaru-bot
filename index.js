@@ -63,7 +63,7 @@ const start = async() => {
 	client.ev.on("contacts.update", async uptade => {
 		for (let contact of uptade) {
 			let id = client.decodeJid(contact.id);
-			if (store.contacts) client.contacts[id] = { id, name: contact.verifiedName || contact.notify };
+			if (store.contacts) store.contacts[id] = { id, name: contact.verifiedName || contact.notify };
 		};
 	});
 
