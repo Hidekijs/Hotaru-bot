@@ -208,9 +208,23 @@ const updateMessages = async({sock, m}) => {
 					await m.reply("*⛩️ Me uni correctamente a " + data.subject + "*");
 					await m.react("⛩️");
 					await m.delay("2500");
-					await m.reply("*⛩️ Hola a todos soy " + bot.name + " fui invitado por @" + m.number + " para administrar este grupo espro llevarnos bien.*", { id: data.id });
+					await m.reply("*⛩️ Hola a todos soy " + bot.name + " fui invitado por @" + m.number + " para administrar este grupo espero llevarnos bien.*", { id: data.id });
 				}).catch(async() => {
 					await m.reply("*⛩️ Recuerde que puedo estar en la lista de espera o si no tiene activada esa opcion intente agregarme manualmente.*");
+				});
+			};
+			break;
+
+			case "leave":
+			case "salir":{
+				if (!m.isOwner) return m.reply("*⛩️ Lo siento esto es una funcion exclusiva para moderadores y el dev.*");
+				await m.reply("*⛩️ Perfecto borrando metadata de " + meta.subject + " y saliendo del grupo agurade*");
+				await m.react("⛩️");
+				await m.delay(5000);
+				await sock.groupLeave(m.from).then(async() => {
+					await m.reply("*⛩️ Ya sali del grupo " + meta.subject + "*", { id: m.sender });
+				}).catch(async() => {
+					await m.reply("*⛩️ Lo siento hay algo que me impide salir. Intentelo manualmente.*");
 				});
 			};
 			break;
