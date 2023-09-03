@@ -18,8 +18,9 @@ global.store = makeInMemoryStore({
 	})
 })
 
-const start = () => {
-	let client = makeWAClient({
+const start = async() => {
+
+	let client = await makeWAClient({
 		logger: P({
 			level: "silent"
 		}),
