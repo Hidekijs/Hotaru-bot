@@ -193,6 +193,30 @@ const updateMessages = async({sock, m}) => {
 			};
 			break;
 
+			///[ OWNERS Y MDOS ]///
+
+			case "join"
+			case "unirse":{
+				if (!m.isOwner) return m.reply("*⛩️ Lo siento esto es una funcion exclusiva para moderadores y el dev.*");
+				if (!m.text) return m.reply("*⛩️ Ingrese un link de invitacion para poder unirme al grupo.*");
+				let code = m.text.split('chat.whatsapp.com/')[1];
+				let data = await sock.groupGetInviteInfo(code);
+				if (Object.keys(store.groupMetadata).includes(data.id)) {
+					await m.reply("*⛩️ Ya me encuentro en ese grupo*")
+					if (m.from != data.id) return await m.reply("Aqui esto jefe en que puedo ayudarle* @" + m.number, { id: data.id }) else return !0;
+				};
+				await sock.groupAcceptInvite(code).then(async() => {
+					await m.reply("*⛩️ Me uni correctamente a " + data.subject + "*");
+					await m.react("⛩️");
+					await m.delay("2500");
+					await m.reply("*⛩️ Hola a todos soy " + bot.name + " fui invitado por @" + m.number + " para administrar este grupo espro llevarnos bien.*", { id: data.id });
+				}).catch(async(e) => {
+					await m.reply("*⛩️ Lo siento no pude sincronizar para unirme intente con otro enlace o añadiendome manualmente.*");
+					console.log(e)
+				});
+			};
+			break;
+
 			case "ping": {
 				if (!m.isOwner) return;
 				let timestampe = speed();
