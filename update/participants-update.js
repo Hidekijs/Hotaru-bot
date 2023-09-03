@@ -5,6 +5,8 @@ import { parsePhoneNumber } from 'libphonenumber-js';
 const updateParticipants = async({sock, id, participants, action }) => {
 	try {
 
+		if (participants.some(id => id == sock.user.jid)) return;
+
 		const delay = async timeout => { return new Promise( (resolve) => setTimeout(resolve, timeout) ) }
 		
 		let reply = async(text = "", options = {}) => {
