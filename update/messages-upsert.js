@@ -3,7 +3,6 @@ import { format } from 'util';
 import { exec } from 'child_process';
 import syntaxErr from 'syntax-error';
 import { dataBase } from '../lib/db.js';
-import { getAdmins } from '../lib/functions.js';
 
 const updateMessages = async({sock, m}) => {
 	try {
