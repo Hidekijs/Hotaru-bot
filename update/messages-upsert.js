@@ -1,5 +1,6 @@
 import "../config.js";
 import { format } from 'util';
+import speed from "performance-now";
 import { exec } from 'child_process';
 import syntaxErr from 'syntax-error';
 import { dataBase } from '../lib/db.js';
@@ -189,6 +190,14 @@ const updateMessages = async({sock, m}) => {
 					await m.reply(teks.trim());
 					await m.react('⛩️');
 				} else m.reply('*⛩️ Utilice welcome o bye para testear las funciones.*');
+			};
+			break;
+
+			case "ping": {
+				if (!m.isOwner) return;
+				let timestampe = speed();
+				let latensie = speed() - timestampe
+				await m.reply("*PONG! 🏓*\n\nVelocidad de respuesta: " + latensie.toFixed(3) + "ms");
 			};
 			break;
 
