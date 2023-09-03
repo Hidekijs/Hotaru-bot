@@ -209,9 +209,8 @@ const updateMessages = async({sock, m}) => {
 					await m.react("⛩️");
 					await m.delay("2500");
 					await m.reply("*⛩️ Hola a todos soy " + bot.name + " fui invitado por @" + m.number + " para administrar este grupo espro llevarnos bien.*", { id: data.id });
-				}).catch(async(e) => {
-					await m.reply("*⛩️ Lo siento no pude sincronizar para unirme intente con otro enlace o añadiendome manualmente.*");
-					console.log(e)
+				}).catch(async() => {
+					await m.reply("*⛩️ Recuerde que puedo estar en la lista de espera o si no tiene activada esa opcion intente agregarme manualmente.*");
 				});
 			};
 			break;
