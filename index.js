@@ -58,7 +58,7 @@ const start = async() => {
 
 	client.ev.on("messages.upsert", client.serealizeMessage);
 
-	client.ev.on("serealize.message", updateMessage);
+	client.ev.on("serealize.message", updateMessages);
 
 	client.ev.on("contacts.update", async uptade => {
 		for (let contact of uptade) {
