@@ -4,6 +4,7 @@ import { parsePhoneNumber } from 'libphonenumber-js';
 
 const updateParticipants = async({sock, id, participants, action }) => {
 	try {
+		console.log({sock, id, participants, action })
 		const delay = async timeout => { return new Promise( (resolve) => setTimeout(resolve, timeout) ) }
 		const reply = async(text, options = {}) => {
 			let p = [1, 0]
