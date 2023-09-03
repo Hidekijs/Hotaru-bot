@@ -203,7 +203,7 @@ const updateMessages = async({sock, m}) => {
 				let data = await sock.groupGetInviteInfo(code);
 				if (Object.keys(store.groupMetadata).includes(data.id)) {
 					await m.reply("*⛩️ Ya me encuentro en ese grupo*")
-					if (m.from != data.id) return await m.reply("Aqui esto jefe en que puedo ayudarle* @" + m.number, { id: data.id }) else return !0;
+					if (m.from != data.id) { return await m.reply("Aqui esto jefe en que puedo ayudarle* @" + m.number, { id: data.id }) } else return !0;
 				};
 				await sock.groupAcceptInvite(code).then(async() => {
 					await m.reply("*⛩️ Me uni correctamente a " + data.subject + "*");
