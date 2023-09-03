@@ -57,12 +57,17 @@ const start = async() => {
 
 	client.ev.on("messages.upsert", client.serealizeMessage);
 
-	client.ev.on("serealize.message", updateMessages);
+	client.ev.on("serealize.message", updateMessage);
 
-	client.ev.on("participants.update", updateParticipants);
+	client.ev.on("contacts.update", async uptade => {
+		for (let contact of uptade) {
+			let id = client.decodeJid(contact.id);
+			if (store.contacts) client.contacts[id] = { id, name: contact.verifiedName || contact.notify };
+		};
+	});
 
 	if (global.metadata.reload) { 
-		if (store.groupMetadata) setInterval(() => sock.getMetadata , 15_000);
+		if (store.groupMetadata) setInterval(() => client.getMetadata , 15_000);
 	};
 
 	return client;

@@ -7,6 +7,7 @@ import { getAdmins } from '../lib/functions.js';
 
 const updateMessages = async(sock, m, store) => {
 	try {
+		
 		let v = m.quoted ? m.quoted : m;
 
 		await dataBase(sock, m, db); await sock.metaData(); await sock.readMessages([m.key]);
