@@ -11,7 +11,7 @@ const updateMessages = async({sock, m}) => {
 
 		await dataBase(sock, m, db); await sock.readMessages([m.key]);
 
-		let meta = store.metadata[m.from];
+		let meta = store.groupMetadata[m.from];
 		let groupAdmins = await sock.getAdmins(m.from);
 
 		///[ BASE DE DATOS ]///
@@ -46,8 +46,8 @@ const updateMessages = async({sock, m}) => {
 			case 'eliminar': {
 				if (!m.isBotAdmin) return m.reply('*⛩️ No se puede usar esta funcion si no soy administrador.*');
 				if (!m.isAdmin) return m.reply('*⛩️ Esta funcion es solo para los administradores.*');
-				if (m.mentionUser.length == 0) return m.reply('*⛩️ Marque un mensaje o use @ para elejir a quien eliminar.*');
-				let user = m.mentionUser && m.mentionUser[0] || m.quoted.sender;
+				if (m.mentionedJid.length == 0) return m.reply('*⛩️ Marque un mensaje o use @ para elejir a quien eliminar.*');
+				let user = m.mentionedJid && m.mentionedJid[0] || m.quoted.sender;
 				if (sock.user.jid == user) return m.reply('*⛩️ No puedo autoeliminarme.*');
 				if (groupAdmins.includes(user) && !m.isOwner) return m.reply('*⛩️ Mis permisos no me permiten eliminar a otro administrador.*');
 				if (user == m.sender) return m.reply('*⛩️ No puedes autoeliminarte.*')
@@ -64,7 +64,7 @@ const updateMessages = async({sock, m}) => {
 					await m.reply('*⛩️ Lo siento usted no tiene los suficientes privilegios para usar este comando por seguridad se le quitara administracion.*')
 					return await sock.groupParticipantsUpdate(m.from, [m.sender], 'demote');
 				};
-				let user = (m.mentionUser.length != 0) ? m.mentionUser[0] : m.quoted.sender;
+				let user = (m.mentionedJid.length != 0) ? m.mentionedJid[0] : m.quoted.sender;
 				if (!user) return m.reply('*⛩️ Marque un mensaje o use @ para elejir a quien darle o quitar administracion.*');
 				if (m.command == 'promote') {
 					if (groupAdmins.includes(user)) return m.reply('*⛩️ Este usuario ya posee privilegios de administrador.*');
@@ -83,7 +83,7 @@ const updateMessages = async({sock, m}) => {
 			case 'antilink':{
 				if (!m.isBotAdmin) return m.reply('*⛩️ No se puede usar esta funcion si no soy administrador.*');
 				if (!m.isAdmin) return m.reply('*⛩️ Esta funcion es solo para los administradores.*');
-				if (!m.mentionUser && !m.quoted) return m.reply('*⛩️ Marque un mensaje o use @ para elejir a quien eliminar.*');
+				if (!m.mentionedJid && !m.quoted) return m.reply('*⛩️ Marque un mensaje o use @ para elejir a quien eliminar.*');
 				if (/true|activar|on/.test(m.args[0])) {
 					if (isAntilink) return m.reply('*⛩️ Esta funcion esta activa en este grupo.*');
 					m.data(m.from).antilink = true;
