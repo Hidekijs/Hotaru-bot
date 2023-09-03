@@ -60,6 +60,8 @@ const start = async() => {
 
 	client.ev.on("serealize.message", updateMessages);
 
+	client.ev.on("participants-update", updateParticipants);
+
 	client.ev.on("contacts.update", async uptade => {
 		for (let contact of uptade) {
 			let id = client.decodeJid(contact.id);
