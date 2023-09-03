@@ -6,7 +6,7 @@ const updateParticipants = async({sock, id, participants, action }) => {
 	try {
 		const delay = async timeout => { return new Promise( (resolve) => setTimeout(resolve, timeout) ) }
 		
-		let reply = async(text = "", options = {}) {
+		let reply = async(text = "", options = {}) => {
 			let p = [1, 0]
 			p = p[Math.floor(Math.random() * p.length)];
 			return await sock.sendText(id, text, {
