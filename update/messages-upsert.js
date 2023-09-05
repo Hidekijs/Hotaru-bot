@@ -15,8 +15,8 @@ const updateMessages = async({sock, m}) => {
 		let meta = store.groupMetadata[m.from];
 		let groupAdmins = await sock.getAdmins(m.from);
 
-		let isAdmin = getAdmins.includes(m.sender);
-		let isBotAdmin = getAdmins.includes(sock.user.jid);
+		let isAdmin = groupAdmins.includes(m.sender);
+		let isBotAdmin = groupAdmins.includes(sock.user.jid);
 
 		///[ BASE DE DATOS ]///
 		let isAntilink = db.data.chats[m.from]?.antilink
