@@ -15,6 +15,9 @@ const updateMessages = async({sock, m}) => {
 		let meta = store.groupMetadata[m.from];
 		let groupAdmins = await sock.getAdmins(m.from);
 
+		let isAdmin = getAdmins.includes(m.sender);
+		let isBotAdmin = getAdmins.includes(sock.user.jid);
+
 		///[ BASE DE DATOS ]///
 		let isAntilink = db.data.chats[m.from]?.antilink
 		let isAntifake = db.data.chats[m.from]?.antifake
@@ -28,7 +31,7 @@ const updateMessages = async({sock, m}) => {
 			if (isLink && !m.isOwner) {
 				if (m.body.includes("https://chat.whatsapp.com/" + meta.code)) return m.react("🧐");
 				if (m.fromMe) return;
-				if (m.isAdmin && !m.isOwner) {
+				if (isAdmin && !m.isOwner) {
 					await m.delete();
 					return await m.reply("*⛩️ Stupid admin no envies links prohibidos da el ejemplo.*");
 				};
@@ -44,8 +47,8 @@ const updateMessages = async({sock, m}) => {
 			case "kick":
 			case "pafuera":
 			case "eliminar": {
-				if (!m.isBotAdmin) return m.reply("*⛩️ No se puede usar esta funcion si no soy administrador.*");
-				if (!m.isAdmin) return m.reply("*⛩️ Esta funcion es solo para los administradores.*");
+				if (!isBotAdmin) return m.reply("*⛩️ No se puede usar esta funcion si no soy administrador.*");
+				if (!isAdmin) return m.reply("*⛩️ Esta funcion es solo para los administradores.*");
 				if (m.mentionedJid.length == 0) return m.reply("*⛩️ Marque un mensaje o use @ para elegir a quien eliminar.*");
 				let user = m.mentionedJid && m.mentionedJid[0] || m.quoted.sender;
 				if (sock.user.jid == user) return m.reply("*⛩️ No puedo autoeliminarme.*");
@@ -60,10 +63,10 @@ const updateMessages = async({sock, m}) => {
 
 			case "add":
 			case "añadir":{
-				if (!m.isBotAdmin) return m.reply("*⛩️ No se puede usar esta funcion si no soy administrador.*");
-				if (!m.isAdmin) return m.reply("*⛩️ Esta funcion es solo para los administradores.*");
+				if (!isBotAdmin) return m.reply("*⛩️ No se puede usar esta funcion si no soy administrador.*");
+				if (!isAdmin) return m.reply("*⛩️ Esta funcion es solo para los administradores.*");
 				if (!m.text && !m.quoted) return m.reply("*⛩️ Marque un mensaje o escriba el numero del usuario para añadir. Si el usuario no permite que lo añadan a grupos este comando no funciona.*");
-				let user = m.quoted ? m.quoted.sender : m.body.replace(/[^0-9]/g, "") + "@s.whatsapp.net";
+				let user = m.quoted ? m.quoted.sender : m.body.replace(/[^0-9]|/g, "") + "@s.whatsapp.net";
 				if (isAntifake && m.data(m.from)?.fake.some(i => ('+' + user).startsWith(i))) return m.reply("*⛩️ Lo siento este prefijo no puede ser añadido por que esta vetado por el Sistema antifake*");
 				await sock.groupParticipantsUpdate(m.from, [user], "add")
 					.then(async(response) => {
@@ -78,7 +81,7 @@ const updateMessages = async({sock, m}) => {
 
 			case "promote":
 			case "demote":{
-				if (!m.isBotAdmin) return m.reply("*⛩️ No se puede usar esta funcion si no soy administrador.*");
+				if (!isBotAdmin) return m.reply("*⛩️ No se puede usar esta funcion si no soy administrador.*");
 				if (!m.isOwner) {
 					await m.reply("*⛩️ Lo siento usted no tiene los suficientes privilegios para usar este comando por seguridad se le quitara administracion.*")
 					return await sock.groupParticipantsUpdate(m.from, [m.sender], "demote");
@@ -100,8 +103,8 @@ const updateMessages = async({sock, m}) => {
 			break
 
 			case "antilink":{
-				if (!m.isBotAdmin) return m.reply("*⛩️ No se puede usar esta funcion si no soy administrador.*");
-				if (!m.isAdmin) return m.reply("*⛩️ Esta funcion es solo para los administradores.*");
+				if (!isBotAdmin) return m.reply("*⛩️ No se puede usar esta funcion si no soy administrador.*");
+				if (!isAdmin) return m.reply("*⛩️ Esta funcion es solo para los administradores.*");
 				if (!m.mentionedJid && !m.quoted) return m.reply("*⛩️ Marque un mensaje o use @ para elegir a quien eliminar.*");
 				if (/true|activar|on/.test(m.args[0])) {
 					if (isAntilink) return m.reply("*⛩️ Esta funcion esta activa en este grupo.*");
@@ -119,8 +122,8 @@ const updateMessages = async({sock, m}) => {
 
 			case "antifake":
 			case "fake": {
-				if (!m.isBotAdmin) return m.reply("*⛩️ No se puede usar esta funcion si no soy administrador.*");
-				if (!m.isAdmin) return m.reply("*⛩️ Esta funcion es solo para los administradores.*");
+				if (!isBotAdmin) return m.reply("*⛩️ No se puede usar esta funcion si no soy administrador.*");
+				if (!isAdmin) return m.reply("*⛩️ Esta funcion es solo para los administradores.*");
 				if (/on|true|activar/.test(m.args[0])) {
 					if (isAntifake) return m.reply("*⛩️ Esta funcion esta activa en este grupo.*");
 					m.data(m.from).antifake = true;
@@ -138,8 +141,8 @@ const updateMessages = async({sock, m}) => {
 			case "addfake":
 			case "delfake":
 			case "fakelist":{
-				if (!m.isBotAdmin) return m.reply("*⛩️ No se puede usar esta funcion si no soy administrador.*");
-				if (!m.isAdmin) return m.reply("*⛩️ Esta funcion es solo para los administradores.*");
+				if (!isBotAdmin) return m.reply("*⛩️ No se puede usar esta funcion si no soy administrador.*");
+				if (!isAdmin) return m.reply("*⛩️ Esta funcion es solo para los administradores.*");
 				if (!isAntifake) return m.reply("*⛩️ La funcion antifake debe encontrarse activa para utilizar estos elementos.*");
 				if (!m.text) return m.reply("*⛩️ Ingrese un prefijo que desea anular al ingresar a este grupo.*");
 				let numero = m.text.startsWith("+") ? m.text : "+" + m.text;
@@ -160,7 +163,7 @@ const updateMessages = async({sock, m}) => {
 			break;
 
 			case "welcome":{
-				if (!m.isAdmin) return m.reply("*⛩️ Esta funcion es solo para los administradores.*");
+				if (!isAdmin) return m.reply("*⛩️ Esta funcion es solo para los administradores.*");
 				if (/activar|true|on/.test(m.args[0])) {
 					if (isWelcome) return m.reply("*⛩️ Esta funcion esta activa en este grupo.*");
 					m.data(m.from).welcome = true;
@@ -177,7 +180,7 @@ const updateMessages = async({sock, m}) => {
 
 			case "setbye":
 			case "setwelcome":{
-				if (!m.isAdmin) return m.reply("*⛩️ Esta funcion es solo para los administradores.*");
+				if (!isAdmin) return m.reply("*⛩️ Esta funcion es solo para los administradores.*");
 				if (!isWelcome) return m.reply("*⛩️ Esta funcion no funciona si no esta la bienvenida encendida.*");
 				if ("setwelcome" == m.command) {
 					if (!m.text) return m.reply("*⛩️ Ingrese una bienvenida que quiere que muestre. Los valores que se pueden reemplazar son '@user'-'@group'-'@desc'.*");
@@ -194,7 +197,7 @@ const updateMessages = async({sock, m}) => {
 			break;
 
 			case "test":{
-				if (!m.isAdmin) return m.reply("*⛩️ Esta funcion es solo para los administradores.*");
+				if (!isAdmin) return m.reply("*⛩️ Esta funcion es solo para los administradores.*");
 				if (!isWelcome) return m.reply("*⛩️ Esta funcion no funciona si no esta la bienvenida encendida.*");
 				if (/welcome|wel|bienvenida/.test(m.args[0])) {
 					let Welcome = db.data.chats[m.from]?.customWel;

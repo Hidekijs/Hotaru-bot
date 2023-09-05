@@ -70,7 +70,7 @@ const start = async() => {
 	});
 
 	if (global.metadata.reload) { 
-		if (store.groupMetadata) setInterval(() => client.getMetadata , 15_000);
+		if (store.groupMetadata) setInterval(() => client.getMetadata , 10_000);
 	};
 
 	return client;
