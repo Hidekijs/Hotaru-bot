@@ -66,10 +66,12 @@ const updateMessages = async({sock, m}) => {
 				let user = m.quoted ? m.quoted.sender : (m.body.replace(/[^0-9]/g, "") + "@s.whatsapp.net");
 				if (isAntifake && m.data(m.from)?.fake.some(i => user.startsWith(i))) return m.reply("*⛩️ Lo siento este prefijo no puede ser añadido por que esta vetado por el Sistema antifake*");
 				await sock.groupParticipantsUpdate(m.from, [user], "add")
-					.then(async(i) => {
-						if (i.status == 403) return m.reply("*⛩️ Este usuario no puede ser añadido al grupo por su privacidad*");
-						else if (i.status == 409) return m.reply("*⛩️ Este usuario ya se encuentra dentro del grupo.*");
-						else m.reply("*⛩️ bienvenid@ @" + user.split("@")[0] + " fuiste añadido por* @" + m.number);
+					.then(async(response) => {
+						for (let i of response) {
+							if (i.status == 403) return m.reply("*⛩️ Este usuario no puede ser añadido al grupo por su privacidad*");
+							else if (i.status == 409) return m.reply("*⛩️ Este usuario ya se encuentra dentro del grupo.*");
+							else m.reply("*⛩️ bienvenid@ @" + user.split("@")[0] + " fuiste añadido por* @" + m.number);
+						}
 					});
 			};
 			break;
