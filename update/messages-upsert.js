@@ -163,7 +163,7 @@ const updateMessages = async({sock, m}) => {
 					let teks = "*⛩️ Lista de prefijos añadidos\n\n";
 					let number = 1;
 					for (let i of data) {
-						teks += `*Prefio N° ${number++}* ~ ${i}\n`;
+						teks += `*Prefijo N° ${number++}* ~ ${i}\n`;
 					}
 					teks += "\n *Total de prefijos:* " + data.length;
 					await m.reply(teks.trim());
