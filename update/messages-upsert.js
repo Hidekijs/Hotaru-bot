@@ -144,15 +144,16 @@ const updateMessages = async({sock, m}) => {
 				if (!isBotAdmin) return m.reply("*⛩️ No se puede usar esta funcion si no soy administrador.*");
 				if (!isAdmin) return m.reply("*⛩️ Esta funcion es solo para los administradores.*");
 				if (!isAntifake) return m.reply("*⛩️ La funcion antifake debe encontrarse activa para utilizar estos elementos.*");
-				if (!m.text) return m.reply("*⛩️ Ingrese un prefijo que desea anular al ingresar a este grupo.*");
 				let numero = m.text.startsWith("+") ? m.text : "+" + m.text;
 				let data = m.data(m.from)?.fake || db.data.chats[m.from]?.fake;
 				if ("addfake" == m.command) {
+					if (!m.text) return m.reply("*⛩️ Ingrese un prefijo que desea añadir a la lista par que no ingrese a este grupo.*");
 					if (data.includes(numero)) return m.reply("*⛩️ Este prefijo se encuentra en la lista.*");
 					data.push(numero);
 					await m.reply("*⛩️ Se agrego " + numero + " a la lista de prefijos prohibidos.*");
 					await m.react("⛩️");
 				} else if ("delfake" == m.command) {
+					if (!m.text) return m.reply("*⛩️ Ingrese un prefijo que desea eliminar de la lista para que ingrese a este grupo.*");
 					if (!data.includes(numero)) return m.reply("*⛩️ Este prefijo no se encuentra en la lista revise la lista de prefijos.*");
 					let posi = data.indexOf(numero);
 					data.splice(posi, 1);
