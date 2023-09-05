@@ -183,7 +183,7 @@ const updateMessages = async({sock, m}) => {
 					await m.reply("*⛩️ Se modifico la bienvenida de este grupo.*");
 					await m.react("⛩️");
 				} else if("setbye" == m.command) {
-					if (!m.text) return m.reply("*⛩️ Ingrese una despedida que quiere que muestre. Los valores que se pueden reemplazar son "@user"-"@group"-"@desc".*");
+					if (!m.text) return m.reply("*⛩️ Ingrese una despedida que quiere que muestre. Los valores que se pueden reemplazar son '@user'-'@group'-'@desc'.*");
 					m.data(m.from).customBye = m.text.trim();
 					await m.reply("*⛩️ Se modifico la despedida de este grupo.*");
 					await m.react("⛩️");
