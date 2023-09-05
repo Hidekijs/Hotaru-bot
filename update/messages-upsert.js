@@ -160,7 +160,7 @@ const updateMessages = async({sock, m}) => {
 					await m.reply("*⛩️ El prefijo " + numero + " se elimino de la lista, todos esos numero ingresaran con normalidad.*");
 					await m.react("⛩️");
 				} else if ("fakelist" == m.command) {
-					let teks = "*⛩️ Lista de prefijos añadidos\n\n";
+					let teks = "*⛩️ Lista de prefijos añadidos*\n\n";
 					let number = 1;
 					for (let i of data) {
 						teks += `*Prefijo N° ${number++}* ~ ${i}\n`;
