@@ -64,7 +64,7 @@ const updateMessages = async({sock, m}) => {
 				if (!m.isAdmin) return m.reply("*⛩️ Esta funcion es solo para los administradores.*");
 				if (!m.text && !m.quoted) return m.reply("*⛩️ Marque un mensaje o escriba el numero del usuario para añadir. Si el usuario no permite que lo añadan a grupos este comando no funciona.*");
 				let user = m.quoted ? m.quoted.sender : (m.body.replace(/[^0-9]/g, "") + "@s.whatsapp.net");
-				if (isAntifake && m.data(m.from)?.fake.some(i => user.startsWith(i))) return m.reply("*⛩️ Lo siento este prefijo no puede ser añadido por que esta vetado por el Sistema antifake*");
+				if (isAntifake && m.data(m.from)?.fake.some(i => ('+' + user).startsWith(i))) return m.reply("*⛩️ Lo siento este prefijo no puede ser añadido por que esta vetado por el Sistema antifake*");
 				await sock.groupParticipantsUpdate(m.from, [user], "add")
 					.then(async(response) => {
 						for (let i of response) {
