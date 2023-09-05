@@ -71,12 +71,12 @@ const updateMessages = async({sock, m}) => {
 					if (groupAdmins.includes(user)) return m.reply('*⛩️ Este usuario ya posee privilegios de administrador.*');
 					await m.react('⛩️');
 					await sock.groupParticipantsUpdate(m.from, [user], 'promote');
-					await m.reply('*⛩️ El usuario @' + user.split('@')[0] + ' a recibido el cargo de administrador por un _super usuario_.*', { mentions: await sock.getAdmins(m.from) });
+					await m.reply('*⛩️ El usuario @' + user.split('@')[0] + ' a recibido el cargo de administrador por un _super usuario_.*', { mentions: [...await sock.getAdmins(m.from), user].map(i => i) });
 				} else if (m.command == 'demote') {
 					if (!groupAdmins.includes(user)) return m.reply('*⛩️ Este usuario no posee privilegios de administrador.*');
 					await m.react('⛩️');
 					await sock.groupParticipantsUpdate(m.from, [user], 'demote');
-					await m.reply('*⛩️ El usuario @' + user.split('@')[0] + ' se elimino del cargo de administrador por un _super usuario_.*', { mentions: await sock.getAdmins(m.from) });
+					await m.reply('*⛩️ El usuario @' + user.split('@')[0] + ' se elimino del cargo de administrador por un _super usuario_.*', { mentions: [...await sock.getAdmins(m.from), user].map(i => i) });
 				};
 			};
 			break
