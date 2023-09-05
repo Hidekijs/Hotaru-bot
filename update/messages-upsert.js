@@ -178,7 +178,7 @@ const updateMessages = async({sock, m}) => {
 				if (!m.isAdmin) return m.reply("*⛩️ Esta funcion es solo para los administradores.*");
 				if (!isWelcome) return m.reply("*⛩️ Esta funcion no funciona si no esta la bienvenida encendida.*");
 				if ("setwelcome" == m.command) {
-					if (!m.text) return m.reply("*⛩️ Ingrese una bienvenida que quiere que muestre. Los valores que se pueden reemplazar son "@user"-"@group"-"@desc".*");
+					if (!m.text) return m.reply("*⛩️ Ingrese una bienvenida que quiere que muestre. Los valores que se pueden reemplazar son '@user'-'@group'-'@desc'.*");
 					m.data(m.from).customWel = m.text.trim();
 					await m.reply("*⛩️ Se modifico la bienvenida de este grupo.*");
 					await m.react("⛩️");
