@@ -60,12 +60,12 @@ const updateMessages = async({sock, m}) => {
 					await m.react(react.admin)
 				} else if(["edit", "modify"].some(i => i == m.args[0])) {
 					if (meta.restrict) return m.reply("*Ya esta abierta la edicion de descripcion, icono y duracion de mensajes.*");
-					await sock.groupSettingUpdate(m.from, "locked");
+					await sock.groupSettingUpdate(m.from, "unlocked");
 					await m.reply("*Se abrio la edicion del grupo ahora todos pueden cambiar icono, descripcion, y duracion de mensajes.*");
 					await m.react(react.admin);
 				} else if(["noedit", "nomodify"].some(i => i == m.args[0])) {
 					if (!meta.restrict) return m.reply("*Y esta cerrada la edicion de descripcion, icono y duracion de mensajes.*");
-					await sock.groupSettingUpdate(m.from, "unlocked");
+					await sock.groupSettingUpdate(m.from, "locked");
 					await m.reply("*Se cerro la edicion del grupo solo para administradores.*");
 				} else await m.reply("*Utilice " + m.prefix + m.command + " abrir/cerrar/edit/noedit para cambiar parametros del grupo.*");
 			};
