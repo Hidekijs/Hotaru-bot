@@ -59,11 +59,13 @@ const updateMessages = async({sock, m}) => {
 					await m.reply("*El grupo se abrio para todos los participantes.*")
 					await m.react(react.admin)
 				} else if(["edit", "modify"].some(i => i == m.args[0])) {
+					if (!m.isOwner) return m.reply("*⛩️ Lo siento usted no tiene los suficientes privilegios para usar este comando por seguridad se le quitara administracion.*")
 					if (!meta.restrict) return m.reply("*Ya esta abierta la edicion de descripcion, icono y duracion de mensajes.*");
 					await sock.groupSettingUpdate(m.from, "unlocked");
 					await m.reply("*Se abrio la edicion del grupo ahora todos pueden cambiar icono, descripcion, y duracion de mensajes.*");
 					await m.react(react.admin);
 				} else if(["noedit", "nomodify"].some(i => i == m.args[0])) {
+					if (!m.isOwner) return m.reply("*⛩️ Lo siento usted no tiene los suficientes privilegios para usar este comando por seguridad se le quitara administracion.*")
 					if (meta.restrict) return m.reply("*Ya esta cerrada la edicion de descripcion, icono y duracion de mensajes.*");
 					await sock.groupSettingUpdate(m.from, "locked");
 					await m.reply("*Se cerro la edicion del grupo solo para administradores.*");
