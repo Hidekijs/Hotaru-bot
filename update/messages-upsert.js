@@ -46,8 +46,8 @@ const updateMessages = async({sock, m}) => {
 
 			case "group":
 			case "gp":{
-				if (!m.isBotAdmin) return m.reply(mess.botAdmin);
-				if (!m.isAdmin) return m.reply(mess.admin);
+				if (!isBotAdmin) return m.reply("*⛩️ No se puede usar esta funcion si no soy administrador.*");
+				if (!isAdmin) return m.reply("*⛩️ Esta funcion es solo para los administradores.*");
 				if (["cerrar", "close"].some(i => i == m.args[0])) {
 					if (meta.announce) return m.reply("*El grupo ya se encuentra cerrado.*");
 					await sock.groupSettingUpdate(m.from, "announcement");
