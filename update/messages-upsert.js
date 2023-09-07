@@ -12,7 +12,7 @@ const updateMessages = async({sock, m}) => {
 
 		await dataBase(sock, m, db); await sock.readMessages([m.key]);
 
-		let meta = store.groupMetadata[m.from];
+		let meta = await store.groupMetadata[m.from];
 		let groupAdmins = await sock.getAdmins(m.from);
 
 		let isAdmin = groupAdmins.includes(m.sender);
@@ -44,6 +44,33 @@ const updateMessages = async({sock, m}) => {
 
 		switch (m.command) {
 
+			case "group":
+			case "gp":{
+				if (!m.isBotAdmin) return m.reply(mess.botAdmin);
+				if (!m.isAdmin) return m.reply(mess.admin);
+				if (["cerrar", "close"].some(i => i == m.args[0])) {
+					if (meta.announce) return m.reply("*El grupo ya se encuentra cerrado.*");
+					await sock.groupSettingUpdate(m.from, "announcement");
+					await m.reply("*El grupo se cerro solo para administradores.*");
+					await m.react(react.admin);
+				} else if(["abrir", "open"].some(i => i == m.args[0])) {
+					if (!meta.announce) return m.reply("*El grupo ya se encuentra abierto.*");
+					await sock.groupSettingUpdate(m.from, "not_announcement");
+					await m.reply("*El grupo se abrio para todos los participantes.*")
+					await m.react(react.admin)
+				} else if(["edit", "modify"].some(i => i == m.args[0])) {
+					if (meta.restrict) return m.reply("*Ya esta abierta la edicion de descripcion, icono y duracion de mensajes.*");
+					await sock.groupSettingUpdate(m.from, "locked");
+					await m.reply("*Se abrio la edicion del grupo ahora todos pueden cambiar icono, descripcion, y duracion de mensajes.*");
+					await m.react(react.admin);
+				} else if(["noedit", "nomodify"].some(i => i == m.args[0])) {
+					if (!meta.restrict) return m.reply("*Y esta cerrada la edicion de descripcion, icono y duracion de mensajes.*");
+					await sock.groupSettingUpdate(m.from, "unlocked");
+					await m.reply("*Se cerro la edicion del grupo solo para administradores.*");
+				} else await m.reply("*Utilice " + m.prefix + m.command + " abrir/cerrar/edit/noedit para cambiar parametros del grupo.*");
+			};
+			break;
+
 			case "kick":
 			case "pafuera":
 			case "eliminar": {
@@ -58,24 +85,6 @@ const updateMessages = async({sock, m}) => {
 				await sock.groupParticipantsUpdate(m.from, [user], "remove");
 				await m.reply("*⛩️ El usuario @" + user.split`@`[0] + " ya no forma parte del grupo.*");
 				await m.react("⛩️");
-			};
-			break;
-
-			case "add":
-			case "añadir":{
-				if (!isBotAdmin) return m.reply("*⛩️ No se puede usar esta funcion si no soy administrador.*");
-				if (!isAdmin) return m.reply("*⛩️ Esta funcion es solo para los administradores.*");
-				if (!m.text && !m.quoted) return m.reply("*⛩️ Marque un mensaje o escriba el numero del usuario para añadir. Si el usuario no permite que lo añadan a grupos este comando no funciona.*");
-				let user = m.quoted ? m.quoted.sender : m.body.replace(/[^0-9]|/g, "") + "@s.whatsapp.net";
-				if (isAntifake && m.data(m.from)?.fake.some(i => ('+' + user).startsWith(i))) return m.reply("*⛩️ Lo siento este prefijo no puede ser añadido por que esta vetado por el Sistema antifake*");
-				await sock.groupParticipantsUpdate(m.from, [user], "add")
-					.then(async(response) => {
-						for (let i of response) {
-							if (i.status == 403) return m.reply("*⛩️ Este usuario no puede ser añadido al grupo por su privacidad*");
-							else if (i.status == 409) return m.reply("*⛩️ Este usuario ya se encuentra dentro del grupo.*");
-							else m.reply("*⛩️ bienvenid@ @" + user.split("@")[0] + " fuiste añadido por* @" + m.number);
-						}
-					});
 			};
 			break;
 
