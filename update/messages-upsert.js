@@ -74,7 +74,7 @@ const updateMessages = async({sock, m}) => {
 				if (m.mentionedJid.length == 0) return m.reply("*⛩️ Marque un mensaje o use @ para elegir a quien eliminar.*");
 				let user = m.mentionedJid && m.mentionedJid[0] || m.quoted.sender;
 				if (sock.user.jid == user) return m.reply("*⛩️ No puedo autoeliminarme.*");
-				if (groupAdmins.includes(user) && !m.isOwner) return m.reply("*⛩️ Mis permisos no me permiten eliminar a otro administrador.*");
+				if (m.admins.includes(user) && !m.isOwner) return m.reply("*⛩️ Mis permisos no me permiten eliminar a otro administrador.*");
 				if (user == m.sender) return m.reply("*⛩️ No puedes autoeliminarte.*")
 				if (user.split("@")[0] && mod.includes(user.split("@")[0])) return m.reply("*⛩️ Lo siento este usuario es un moderador no puede ser vulnerado por el bot.*");
 				await sock.groupParticipantsUpdate(m.from, [user], "remove");
@@ -93,12 +93,12 @@ const updateMessages = async({sock, m}) => {
 				let user = (m.mentionedJid.length != 0) ? m.mentionedJid[0] : m.quoted.sender;
 				if (!user) return m.reply("*⛩️ Marque un mensaje o use @ para elegir a quien darle o quitar administracion.*");
 				if (m.command == "promote") {
-					if (groupAdmins.includes(user)) return m.reply("*⛩️ Este usuario ya posee privilegios de administrador.*");
+					if (m.admins.includes(user)) return m.reply("*⛩️ Este usuario ya posee privilegios de administrador.*");
 					await m.react("⛩️");
 					await sock.groupParticipantsUpdate(m.from, [user], "promote");
 					await m.reply("*⛩️ El usuario @" + user.split("@")[0] + " a recibido el cargo de administrador por un _super usuario_.*", { mentions: [...await sock.getAdmins(m.from), user].map(i => i) });
 				} else if (m.command == "demote") {
-					if (!groupAdmins.includes(user)) return m.reply("*⛩️ Este usuario no posee privilegios de administrador.*");
+					if (!m.admins.includes(user)) return m.reply("*⛩️ Este usuario no posee privilegios de administrador.*");
 					await m.react("⛩️");
 					await sock.groupParticipantsUpdate(m.from, [user], "demote");
 					await m.reply("*⛩️ El usuario @" + user.split("@")[0] + " se elimino del cargo de administrador por un _super usuario_.*", { mentions: [...await sock.getAdmins(m.from), user].map(i => i) });
