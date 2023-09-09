@@ -76,7 +76,7 @@ const updateMessages = async({sock, m}) => {
 				if (sock.user.jid == user) return m.reply("*⛩️ No puedo autoeliminarme.*");
 				if (m.admins.includes(user) && !m.isOwner) return m.reply("*⛩️ Mis permisos no me permiten eliminar a otro administrador.*");
 				if (user == m.sender) return m.reply("*⛩️ No puedes autoeliminarte.*")
-				if (mod.includes(user.split("@")[0])) return m.reply("*⛩️ Lo siento este usuario es un moderador no puede ser vulnerado por el bot.*");
+				if (mods.includes(user.split("@")[0])) return m.reply("*⛩️ Lo siento este usuario es un moderador no puede ser vulnerado por el bot.*");
 				await sock.groupParticipantsUpdate(m.from, [user], "remove");
 				await m.reply("*⛩️ El usuario @" + user.split`@`[0] + " ya no forma parte del grupo.*");
 				await m.react("⛩️");
