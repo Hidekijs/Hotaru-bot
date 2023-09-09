@@ -27,7 +27,7 @@ const updateParticipants = async({sock, id, participants, action }) => {
 		let dataFake = db.data?.chats[id]?.fake;
 		let meta = store.groupMetadata[id];
 		let sender = participants[0];
-		let sender2 = participants[1] || null
+		let sender2 = participants[1] || "0@s.wahtsapp.net";
 
 		if (isAntifake) {
 			let phoneNumber = parsePhoneNumber(`+${sender.split('@')[0]}`)

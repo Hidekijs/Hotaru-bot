@@ -71,12 +71,12 @@ const updateMessages = async({sock, m}) => {
 			case "eliminar": {
 				if (!m.isBotAdmin) return m.reply("*⛩️ No se puede usar esta funcion si no soy administrador.*");
 				if (!m.isAdmin) return m.reply("*⛩️ Esta funcion es solo para los administradores.*");
-				if (m.mentionedJid.length == 0) return m.reply("*⛩️ Marque un mensaje o use @ para elegir a quien eliminar.*");
-				let user = m.mentionedJid && m.mentionedJid[0] || m.quoted.sender;
+				let user = m.quoted ? m.quoted.sender : m.mentionedJid ? m.mentionedJid[0] : m.body.replace(/[0-9]/i, "") + "@s.whatsapp.net";
+				if (!user) return m.reply("*⛩️ Marque un mensaje o use @ para elegir a quien eliminar.*");
 				if (sock.user.jid == user) return m.reply("*⛩️ No puedo autoeliminarme.*");
 				if (m.admins.includes(user) && !m.isOwner) return m.reply("*⛩️ Mis permisos no me permiten eliminar a otro administrador.*");
 				if (user == m.sender) return m.reply("*⛩️ No puedes autoeliminarte.*")
-				if (user.split("@")[0] && mod.includes(user.split("@")[0])) return m.reply("*⛩️ Lo siento este usuario es un moderador no puede ser vulnerado por el bot.*");
+				if (mod.includes(user.split("@")[0])) return m.reply("*⛩️ Lo siento este usuario es un moderador no puede ser vulnerado por el bot.*");
 				await sock.groupParticipantsUpdate(m.from, [user], "remove");
 				await m.reply("*⛩️ El usuario @" + user.split`@`[0] + " ya no forma parte del grupo.*");
 				await m.react("⛩️");
@@ -90,7 +90,7 @@ const updateMessages = async({sock, m}) => {
 					await m.reply("*⛩️ Lo siento usted no tiene los suficientes privilegios para usar este comando por seguridad se le quitara administracion.*")
 					return await sock.groupParticipantsUpdate(m.from, [m.sender], "demote");
 				};
-				let user = (m.mentionedJid.length != 0) ? m.mentionedJid[0] : m.quoted.sender;
+				let user = m.quoted ? m.quoted.sender : (m.mentionedJid.length != 0) ? m.mentionedJid[0] : m.body.replace(/[0-9]/i, "") + "@s.whatsapp.net";
 				if (!user) return m.reply("*⛩️ Marque un mensaje o use @ para elegir a quien darle o quitar administracion.*");
 				if (m.command == "promote") {
 					if (m.admins.includes(user)) return m.reply("*⛩️ Este usuario ya posee privilegios de administrador.*");
