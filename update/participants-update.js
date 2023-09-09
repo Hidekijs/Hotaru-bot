@@ -54,7 +54,6 @@ const updateParticipants = async({sock, id, participants, action }) => {
 
 			case 'remove':{
 				if (isWelcome){
-					if (sender2 == sock.user.jid) return;
 					let Bye = db.data.chats[id]?.customBye;
 					let teks = Bye.replace('@user', `@${sender.split('@')[0]}`).replace('@group', await sock.getName(id)).replace('@desc', meta.desc);
 					await reply(teks.trim());
@@ -63,14 +62,12 @@ const updateParticipants = async({sock, id, participants, action }) => {
 			break;
 
 			case 'promote':{
-				if (sender2 == sock.user.jid) return;
 				let promote = `*⛩️ Nuevo Usuario Promovido ⛩️*\n\n*Usuario:* @${sender.split('@')[0]}\n*Promovido por:* @${sender2.split('@')[0]}\n\n@${sender.split('@')[0]} *Usted fue añadido al grupo de administradores a partir de ahora.*`;
 				await reply(promote.trim(), { mentions: meta.participants.filter(i => i.admin == 'admin' || i.admin == 'superadmin').map(i => i.id) });
 			};
 			break;
 
 			case 'demote':{
-				if (sender2 == sock.user.jid) return;
 				let demote = `*⛩️ Nuevo Usuario Degradado ⛩️*\n\n*Usuario:* @${sender.split('@')[0]}\n*Degradado por:* @${sender2.split('@')[0]}\n\n@${sender.split('@')[0]} *Usted a dejado de pertenecer al grupo de admins a partir de ahora.*`;
 				await reply(demote.trim(), { mentions: meta.participants.filter(i => i.admin == 'admin' || i.admin == 'superadmin').map(i => i.id) });
 			};
