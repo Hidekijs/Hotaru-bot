@@ -23,7 +23,6 @@ const updateMessages = async({sock, m}) => {
 			let exec = /https?:\/\/|chat.whatsapp.com\/(?:invite\/)?([0-9A-Za-z]{20,24})|wa.me\/?([0-9])|t.me\/?([0-9])/gi
 			let isLink = exec.test(m.body.trim());
 			if (isLink && !m.isOwner) {
-				if (m.body.includes("https://chat.whatsapp.com/" + meta.code)) return m.react("🧐");
 				if (m.fromMe) return;
 				if (m.isAdmin && !m.isOwner) {
 					await m.delete();
@@ -43,24 +42,24 @@ const updateMessages = async({sock, m}) => {
 				if (!m.isBotAdmin) return m.reply("*⛩️ No se puede usar esta funcion si no soy administrador.*");
 				if (!m.isAdmin) return m.reply("*⛩️ Esta funcion es solo para los administradores.*");
 				if (["cerrar", "close"].some(i => i == m.args[0])) {
-					if (meta.announce) return m.reply("*El grupo ya se encuentra cerrado.*");
+					if (m.metadata.announce) return m.reply("*El grupo ya se encuentra cerrado.*");
 					await sock.groupSettingUpdate(m.from, "announcement");
 					await m.reply("*El grupo se cerro solo para administradores.*");
 					await m.react(react.admin);
 				} else if(["abrir", "open"].some(i => i == m.args[0])) {
-					if (!meta.announce) return m.reply("*El grupo ya se encuentra abierto.*");
+					if (!m.metadata.announce) return m.reply("*El grupo ya se encuentra abierto.*");
 					await sock.groupSettingUpdate(m.from, "not_announcement");
 					await m.reply("*El grupo se abrio para todos los participantes.*")
 					await m.react(react.admin)
 				} else if(["edit", "modify"].some(i => i == m.args[0])) {
 					if (!m.isOwner) return m.reply("*⛩️ Lo siento usted no tiene los suficientes privilegios para usar este comando por seguridad se le quitara administracion.*")
-					if (!meta.restrict) return m.reply("*Ya esta abierta la edicion de descripcion, icono y duracion de mensajes.*");
+					if (!m.metadata.restrict) return m.reply("*Ya esta abierta la edicion de descripcion, icono y duracion de mensajes.*");
 					await sock.groupSettingUpdate(m.from, "unlocked");
 					await m.reply("*Se abrio la edicion del grupo ahora todos pueden cambiar icono, descripcion, y duracion de mensajes.*");
 					await m.react(react.admin);
 				} else if(["noedit", "nomodify"].some(i => i == m.args[0])) {
 					if (!m.isOwner) return m.reply("*⛩️ Lo siento usted no tiene los suficientes privilegios para usar este comando por seguridad se le quitara administracion.*")
-					if (meta.restrict) return m.reply("*Ya esta cerrada la edicion de descripcion, icono y duracion de mensajes.*");
+					if (m.metadata.restrict) return m.reply("*Ya esta cerrada la edicion de descripcion, icono y duracion de mensajes.*");
 					await sock.groupSettingUpdate(m.from, "locked");
 					await m.reply("*Se cerro la edicion del grupo solo para administradores.*");
 				} else await m.reply("*Utilice " + m.prefix + m.command + " abrir/cerrar/edit/noedit para cambiar parametros del grupo.*");
@@ -215,12 +214,12 @@ const updateMessages = async({sock, m}) => {
 				if (!isWelcome) return m.reply("*⛩️ Esta funcion no funciona si no esta la bienvenida encendida.*");
 				if (/welcome|wel|bienvenida/.test(m.args[0])) {
 					let Welcome = db.data.chats[m.from]?.customWel;
-					let teks = Welcome.replace("@user", `@${m.sender.split("@")[0]}`).replace("@group", await sock.getName(m.from)).replace("@desc", meta.desc);
+					let teks = Welcome.replace("@user", `@${m.sender.split("@")[0]}`).replace("@group", await sock.getName(m.from)).replace("@desc", m.metadata.desc);
 					await m.reply(teks.trim());
 					await m.react("⛩️");
 				} else if(/bye|despedida/.test(m.args[0])) {
 					let Bye = db.data.chats[m.from]?.customBye;
-					let teks = Bye.replace("@user", `@${m.sender.split("@")[0]}`).replace("@group", await sock.getName(m.from)).replace("@desc", meta.desc);
+					let teks = Bye.replace("@user", `@${m.sender.split("@")[0]}`).replace("@group", await sock.getName(m.from)).replace("@desc", m.metadata.desc);
 					await m.reply(teks.trim());
 					await m.react("⛩️");
 				} else m.reply("*⛩️ Utilice welcome o bye para testear las funciones.*");
@@ -235,7 +234,7 @@ const updateMessages = async({sock, m}) => {
 				if (!m.text) return m.reply("*⛩️ Ingrese un link de invitacion para poder unirme al grupo.*");
 				let code = m.text.split("chat.whatsapp.com/")[1];
 				let data = await sock.groupGetInviteInfo(code);
-				if (Object.keys(store.groupMetadata).includes(data.id)) {
+				if (Object.keys(store.groupm.metadatadata).includes(data.id)) {
 					await m.reply("*⛩️ Ya me encuentro en ese grupo*")
 					if (m.from != data.id) { return await m.reply("*⛩️ Aqui esto jefe en que puedo ayudarle* @" + m.number, { id: data.id }) } else return !0;
 				};
@@ -253,11 +252,11 @@ const updateMessages = async({sock, m}) => {
 			case "leave":
 			case "salir":{
 				if (!m.isOwner) return m.reply("*⛩️ Lo siento esto es una funcion exclusiva para moderadores y el dev.*");
-				await m.reply("*⛩️ Perfecto borrando metadata de " + meta.subject + " y saliendo del grupo agurade*");
+				await m.reply("*⛩️ Perfecto borrando m.metadatadata de " + m.metadata.subject + " y saliendo del grupo agurade*");
 				await m.react("⛩️");
 				await m.delay(5000);
 				await sock.groupLeave(m.from).then(async() => {
-					await m.reply("*⛩️ Ya sali del grupo " + meta.subject + "*", { id: m.sender });
+					await m.reply("*⛩️ Ya sali del grupo " + m.metadata.subject + "*", { id: m.sender });
 				}).catch(async() => {
 					await m.reply("*⛩️ Lo siento hay algo que me impide salir. Intentelo manualmente.*");
 				});

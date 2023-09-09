@@ -69,10 +69,6 @@ const start = async() => {
 		};
 	});
 
-	if (global.metadata.reload) { 
-		if (store.groupMetadata) setInterval(() => client.getMetadata , 10_000);
-	};
-
 	return client;
 };
 
