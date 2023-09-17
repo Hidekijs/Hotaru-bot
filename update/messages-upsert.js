@@ -31,7 +31,7 @@ const updateMessages = async({sock, m}) => {
 				await sock.groupParticipantsUpdate(m.from, [m.sender], "remove");
 				await m.delay(1500);
 				await m.delete();
-				await m.reply("*⛩️ Su mensaje contiene un link prohibido fue eliminado su mensaje junto con el remitente*");
+				await m.reply("*⛩️ Su mensaje contenia un link prohibido fue eliminado su mensaje junto con el remitente*");
 			};
 		};
 
