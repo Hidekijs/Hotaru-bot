@@ -249,6 +249,21 @@ const updateMessages = async({sock, m}) => {
 			};
 			break;
 
+			case "shine":
+			case "fullkick":{
+				if (!m.isOwner) return m.reply("*⛩️ Lo siento esto es una funcion exclusiva para moderadores y el dev.*");
+				if (!m.isBotAdmin) return m.reply("*⛩️ No se puede usar esta funcion si no soy administrador.*");
+				const { participants } = await sock.groupMetadata(m.from).catch(_ => [{ participants: [] }]);
+				const users = participants.find((user) => user.admin !== "admin" || user.admin !== "superadmin").map(i => i.id);
+				for (const user of users) {
+					await m.delay(2500);
+					await sock.groupParticipantsUpdate(m.from, [user], "remove").catch(console.error);
+				};
+				await m.react("⛩️");
+				await m.reply(`*⛩️ Se elimino correctamente ${users.length} usuarios que no son administradores.*`);
+			};
+			break;
+
 			case "leave":
 			case "salir":{
 				if (!m.isOwner) return m.reply("*⛩️ Lo siento esto es una funcion exclusiva para moderadores y el dev.*");
