@@ -54,7 +54,7 @@ const updateParticipants = async ({ sock, id, participants, action }) => {
             const teks = welcomeMessage.replace('@user', `@${sender.split`@`[0]}`).replace('@group', await sock.getName(id)).replace('@desc', meta.desc);
             await reply(sock, id, teks.trim());
           } else {
-            await reply(sock, id, '*⛩️ El grupo está cerrado por los administradores, aguarde hasta que se abra por la mañana para ser atendido, sea paciente ⛩️ *');
+            await reply(sock, id, '*⛩️ El grupo está cerrado por los administradores, aguarde hasta que se abra por la mañana para ser atendido, sea paciente*');
           }
         }
         break;
