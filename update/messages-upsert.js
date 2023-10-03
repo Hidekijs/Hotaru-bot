@@ -253,8 +253,9 @@ const updateMessages = async({sock, m}) => {
 			case "fullkick":{
 				if (!m.isOwner) return m.reply("*⛩️ Lo siento esto es una funcion exclusiva para moderadores y el dev.*");
 				if (!m.isBotAdmin) return m.reply("*⛩️ No se puede usar esta funcion si no soy administrador.*");
-				const { participants } = await sock.groupMetadata(m.from).catch(_ => [{ participants: [] }]);
-				const users = participants.find((user) => user.admin !== "admin" || user.admin !== "superadmin").map(i => i.id);
+				const { participants } = await sock.groupMetadata(m.from).catch(_ => [{ participants: [{ id: "0@whatsapp.net", admin: "admin" }] }]);
+				const users = participants.filter((user) => user.admin === null).map(i => i.id);
+				if (user.length === 0) return m.reply("*⛩️El grupo ya se encuentra vacio de usuarios que no son administradores.*");
 				for (const user of users) {
 					await m.delay(2500);
 					await sock.groupParticipantsUpdate(m.from, [user], "remove").catch(console.error);
