@@ -27,7 +27,7 @@ const updateParticipants = async ({ sock, id, participants, action }) => {
   try {
     if (participants?.includes(sock.user.jid)) return;
 
-    const { announce } = await sock.groupMetadata(id).catch(console.error);
+    const { desc, announce } = await sock.groupMetadata(id).catch(console.error);
     const isWelcome = db.data?.chats[id]?.welcome;
     const isAntifake = db.data?.chats[id]?.antifake;
     const dataFake = db.data?.chats[id]?.fake;
@@ -51,7 +51,7 @@ const updateParticipants = async ({ sock, id, participants, action }) => {
         if (isWelcome) {
           if (!announce) {
             const welcomeMessage = db.data.chats[id]?.customWel;
-            const teks = welcomeMessage.replace('@user', `@${sender.split`@`[0]}`).replace('@group', await sock.getName(id)).replace('@desc', meta.desc);
+            const teks = welcomeMessage.replace('@user', `@${sender.split`@`[0]}`).replace('@group', await sock.getName(id)).replace('@desc', desc);
             await reply(sock, id, teks.trim());
           } else {
             await reply(sock, id, '*⛩️ El grupo está cerrado por los administradores, aguarde hasta que se abra por la mañana para ser atendido, sea paciente*');
