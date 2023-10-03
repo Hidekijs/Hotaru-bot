@@ -63,7 +63,7 @@ const updateParticipants = async ({ sock, id, participants, action }) => {
       case 'remove': {
         if (isWelcome) {
           const byeMessage = db.data.chats[id]?.customBye;
-          const teks = byeMessage.replace('@user', `@${sender.split('@')[0]}`).replace('@group', await sock.getName(id)).replace('@desc', meta.desc);
+          const teks = byeMessage.replace('@user', `@${sender.split('@')[0]}`).replace('@group', await sock.getName(id)).replace('@desc', desc);
           await reply(sock, id, teks.trim());
         }
         break;
